@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="14px" viewBox="0 0 16 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59.1 (86144) - https://sketch.com -->
+    <title>send-24</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M5.33103448,18.9854044 L20.8344828,12.2523413 C21.0551724,12.1401236 21.0551724,11.8595793 20.8344828,11.8034704 L5.33103448,5.01429844 C5.16551724,4.95818959 5,5.0704073 5,5.29484274 L5.33103448,10.3446401 C5.3862069,10.4568578 5.44137931,10.5690755 5.55172414,10.5690755 L11.9517241,11.8034704 C12.1724138,11.8595793 12.1724138,12.1962324 11.9517241,12.2523413 L5.55172414,13.4306273 C5.44137931,13.4867362 5.3862069,13.5428451 5.3862069,13.6550628 L5,18.760969 C5,18.9292956 5.16551724,19.0415133 5.33103448,18.9854044 Z" id="path-1"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon-/-24-cont-/-social-/-send-24" transform="translate(-5.000000, -5.000000)">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <use id="Mask" fill="#7E7E7E" fill-rule="evenodd" xlink:href="#path-1"></use>
+            <g id="Colors-/-Dark-Theme-/-Grayscale-/-Filled-/-$base-gray" mask="url(#mask-2)" fill="#7E7E7E" fill-rule="evenodd">
+                <rect id="Dark-Theme-/-Grayscale-/-Filled-/-$base-gray" x="0" y="0" width="24" height="24"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

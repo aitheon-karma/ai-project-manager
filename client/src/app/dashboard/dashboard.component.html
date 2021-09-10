@@ -1,0 +1,51 @@
+<main class="project container mt-4"
+      [class.project--search]="search">
+    <button class="project__search-button" *ngIf="!search" (click)="openSearch()">
+        Search task
+        <div class="icon icon--search icon--size-16px ml-2"></div>
+    </button>
+    <div [hidden]="search">
+        <div class="row tasks__submenu">
+      <span class="tasks__submenu-item pl-0" (click)="changeActiveTab(dashboardType.DASHBOARD)"
+            [ngClass]="{'tasks__submenu-item--active': activeTab === dashboardType.DASHBOARD}">Dashboard</span>
+            <span class="tasks__submenu-item pl-0" (click)="changeActiveTab(dashboardType.PROJECTS)"
+                  [ngClass]="{'tasks__submenu-item--active': activeTab === dashboardType.PROJECTS}">All Projects</span>
+            <span class="tasks__submenu-item" (click)="changeActiveTab(dashboardType.EPICS)"
+                  [ngClass]="{'tasks__submenu-item--active': activeTab === dashboardType.EPICS}">Epics</span>
+            <span class="tasks__submenu-item" (click)="changeActiveTab(dashboardType.ARCHIVED)"
+                  [ngClass]="{'tasks__submenu-item--active': activeTab === dashboardType.ARCHIVED}">Archived
+        Projects</span>
+            <span class="tasks__submenu-item" (click)="changeActiveTab(dashboardType.ARCHIVED_EPICS)"
+                  [ngClass]="{'tasks__submenu-item--active': activeTab === dashboardType.ARCHIVED_EPICS}">Archived
+        Epics</span>
+            <span class="tasks__submenu-item"
+                  (click)="changeActiveTab(dashboardType.SETTINGS)"
+                  [ngClass]="{'tasks__submenu-item--active': activeTab === dashboardType.SETTINGS}">
+        Settings
+      </span>
+        </div>
+        <button class="project__automate button button--contained button--medium"
+                [routerLink]="'/automation'">
+            <span class="icon icon--automate"></span>
+            Automation
+        </button>
+        <div class="search-button"></div>
+
+        <ai-app-dashboard *ngIf="activeTab === dashboardType.DASHBOARD"
+                                   [isServiceDashboard]="true"></ai-app-dashboard>
+
+        <div *ngIf="activeTab === dashboardType.PROJECTS || activeTab === dashboardType.ARCHIVED">
+            <ai-projects-list [status]='activeTab'></ai-projects-list>
+        </div>
+
+        <div *ngIf="activeTab === dashboardType.EPICS || activeTab === dashboardType.ARCHIVED_EPICS">
+            <ai-epics-list [status]="activeTab"></ai-epics-list>
+        </div>
+
+        <div *ngIf="activeTab === dashboardType.SETTINGS">
+            <ai-settings [serviceId]="'PROJECT_MANAGER'"></ai-settings>
+        </div>
+    </div>
+
+    <ai-global-search (closeSearch)="onCloseSearch()" [show]="search"></ai-global-search>
+</main>

@@ -1,0 +1,84 @@
+<div class="assignee">
+  <label for="client-name" class="form-label">
+      Epic (Optional)
+  </label>
+  <div class="assignee__add">
+      <button class="icon icon--plus icon--dynamic mr--8"
+              (click)="showSearchAndFocus($event)"
+              [disabled]="task.readOnly || taskReadonly"
+              [class.button--disabled]="task.readOnly || taskReadonly">
+      </button>
+      <!-- Assignee user chips -->
+      <div *ngIf="selectedEpic"
+           class="chip chip--selected chipText d-flex align-items-center justify-content-between"
+           [class.item-disabled]="task.readOnly || taskReadonly">
+        <span class="chip__text" title="{{selectedEpic?.name}}">
+          {{selectedEpic?.name}}
+        </span>
+        <button (click)="removeEpic()"
+                class="icon icon--cancel-circle-f icon--white icon--size-16px ml--4"
+                [class.button--disabled]="task.readOnly || taskReadonly">
+        </button>
+      </div>
+      <!-- Assignee user chips -->
+      <div class="assignee__add__list" *ngIf="searchControl.value || showSearch">
+          <div class="p--8">
+              <div class="search-container search-container--outlined">
+                  <input type="search"
+                         #searchElement
+                         placeholder="Search"
+                         class="search-container__input"
+                         [formControl]="searchControl"
+                         (blur)="hideSearch()">
+                <div class="search-container__button icon icon--search icon--size-16px"></div>
+              </div>
+          </div>
+          <div>
+              <button style="width: 100%;"
+                      class="custom-dropdown__new-pipe button button--ghost button--medium"
+                      (click)="openEpicForm()"
+                      type="button">
+                  <span class="custom-dropdown__new-pipe-icon button__icon icon icon--plus icon--size-16px"></span>
+                  New epic
+              </button>
+              <div class="epic-label-scroll">
+                  <div class="assignee__add__list__item "
+                       *ngFor="let epic of epics"
+                       (click)="setEpic(epic)">
+                      <div class="avatar avatar--32 mr--8"
+                           style="background-color: blueviolet;">
+                        EP
+                      </div>
+                      <span class="epicsName">{{epic?.name }}</span>
+                  </div>
+              </div>
+          </div>
+          <div class="assignee__add__list__item" *ngIf="epics?.length==0">
+              No epics found in project
+          </div>
+      </div>
+  </div>
+</div>
+
+<ng-template #epicModal>
+  <div class="modal-header">
+      <h4 class="modal-title pull-left">New Epic</h4>
+      <button type="button" class="icon icon--close icon--dynamic" aria-label="Close" (click)="closeEpicModal()">
+      </button>
+  </div>
+  <div class="modal-body">
+    <ai-epic-form #epicForm
+                  (closeModal)="closeEpicModal()"
+                  (createdEpic)="getEpics($event)"></ai-epic-form>
+  </div>
+  <div  class="modal-footer">
+    <button class="button button--ghost mr--8 ml-auto button--medium"
+            (click)="closeEpicModal(epicForm)">
+      Cancel
+    </button>
+    <button class="button button--contained button--medium"
+            (click)="createEpic(epicForm)">
+      Create
+    </button>
+  </div>
+</ng-template>

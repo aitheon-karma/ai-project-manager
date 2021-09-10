@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59.1 (86144) - https://sketch.com -->
+    <title>comment-24</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M17,5 C18.1,5 19,5.9 19,7 L19,14 C19,15.1 18.1,16 17,16 L13,16 L12.175,16 L11.6,16.575 L10,18.175 L8.425,16.6 L7.825,16 L7,16 C5.9,16 5,15.1 5,14 L5,7 C5,5.9 5.9,5 7,5 L17,5 L17,5 Z M17,3 L7,3 C4.8,3 3,4.8 3,7 L3,14 C3,16.2 4.8,18 7,18 L10,21 L13,18 L17,18 C19.2,18 21,16.2 21,14 L21,7 C21,4.8 19.2,3 17,3 L17,3 Z" id="path-1"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon-/-24-cont-/-social-/-comment-24" transform="translate(-3.000000, -3.000000)">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <use id="Mask" fill="#7E7E7E" fill-rule="nonzero" xlink:href="#path-1"></use>
+            <g id="Colors-/-Dark-Theme-/-Grayscale-/-Filled-/-$base-gray" mask="url(#mask-2)" fill="#7E7E7E" fill-rule="evenodd">
+                <rect id="Dark-Theme-/-Grayscale-/-Filled-/-$base-gray" x="0" y="0" width="24" height="24"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

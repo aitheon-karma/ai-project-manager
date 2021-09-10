@@ -1,0 +1,142 @@
+<div class="row justify-content-start mx-0 mb-3">
+  <div class="col-9">
+    <div *ngIf="isProjectOwner" class="d-flex justify-content-between align-items-center">
+      <h2 class="settings-title mb-0">Project details</h2>
+      <button type="button" *ngIf="project?.status =='ACTIVE'" class="button button--ghost button--medium"
+        (click)="updateProject({ status: 'ARCHIVED', name: project.name }, true)">
+        <span class="button__icon icon icon--size-16px icon--archive"></span>
+        Archive project
+      </button>
+      <button type="button" *ngIf="project?.status =='ARCHIVED'" class="button button--ghost button--medium ml-auto mr-2"
+        (click)="updateProject({ status: 'ACTIVE'}, true)">
+        Unarchive project
+      </button>
+      <button type="button" *ngIf="project?.status =='ARCHIVED'" class="button button--ghost button--medium button--error"
+        (click)="updateProject({ status: 'DELETED' }, true)">
+        <span class="button__icon icon icon--size-16px icon--delete"></span>
+        Delete project
+      </button>
+    </div>
+    <span class="settings-info">Detail Information about project</span>
+    <div class="settings-line mt--24"></div>
+    <div *ngIf="!loading;else loader;">
+      <div *ngIf="isProjectOwner" class="mt--24 d-flex">
+        <div class="upload_image">
+          <div class="table">
+            <button type="button" *ngIf="projectForm.get('cover').value" tooltip='Remove Cover'
+              ng-reflect-tooltip='Remove Cover' ng-reflect-placement='bottom' ng-reflect-delay='500'
+              class="chip__icon-wrap--right chip__icon-wrap--pointer icon icon--cancel-circle-f custom_chip"
+              (click)="onCancleCover()">
+            </button>
+            <img *ngIf="!projectForm.get('cover').value" src="assets/image.svg">
+            <img *ngIf="projectForm.get('cover').value" [src]="projectForm.get('cover').value">
+          </div>
+        </div>
+        <div class="upload-info ml--24">
+          <h4 class="upload-info__title">Project cover</h4>
+          <div class="d-flex mb--16">
+            <span class="upload-info__text mr--32">
+              Max image size: 2MB
+            </span>
+            <span class="upload-info__text">
+              Formats: JPG, PNG
+            </span>
+          </div>
+          <label class="button button--ghost button--medium upload-info__button" for="upload-files">Upload</label>
+          <input ng2FileSelect hidden id="upload-files" name="upload-files" class="upload-input form-control"
+            type="file" [uploader]="driveUploader?.uploader" accept="image/x-png ,image/jpeg" />
+          <ai-drive-uploader (failedUploadFile)="failedUpload()" [autoUpload]="true" #driveUploader
+            (success)="onSuccessUpload($event)" (afterAddingFile)="validateUploadedFile($event)"
+            [oganizationId]="serviceKey?.key" [service]="serviceKey">
+          </ai-drive-uploader>
+        </div>
+      </div>
+      <form [formGroup]="projectForm">
+        <div *ngIf="isProjectOwner" class="project">
+          <div class="input-wrap input-wrap--ghost">
+            <input  #projectName (focus)="counterShow = true" (blur)="counterShow = false" 
+                    class="input-wrap__input pr-5" type="text" autocomplete="off" 
+                    placeholder="Enter Project name" formControlName="name" maxlength="30">
+            <span class="input-wrap__counter" *ngIf="counterShow">{{ projectForm.get('name').value.length }}/30</span>
+            <span class="input-wrap__icon icon icon--edit project-edit-icon " (click)="editProjectName()"></span>
+          </div>
+          <label class="text-danger name-label" *ngIf="projectForm.get('name').hasError('required')">
+            Project name is required field
+          </label>
+          <label class="text-danger name-label" *ngIf="projectForm.get('name').hasError('maxlength')">
+            Project name cannot be more than 30 characters long
+          </label>
+          <label class="text-danger name-label" *ngIf="projectForm.get('name').hasError('pattern')">
+            Project name invalid
+          </label>
+        </div>
+        <div *ngIf="isProjectOwner">
+          <label>Description</label>
+          <div class="textarea-wrap textarea-wrap--contained">
+            <textarea class="textarea-wrap__textarea"
+                      formControlName="description"
+                      autosize
+                      [minRows]="1"
+                      [maxRows]="8"
+                      maxlength="200"
+                      placeholder="Enter Description"></textarea>
+            <span class="textarea-wrap__counter">
+              {{ projectForm.get('description').value ? projectForm.get('description').value?.length : 0 }}/200
+            </span>
+          </div>
+        </div>
+
+        <div class="mt--24">
+          <label>Labels</label>
+          <div class="row align-items-center">
+            <div class="col-md-10">
+              <div class="chip chip--icon-right chip--selected parent-tt {{label.color}}-chip mr-2"
+                *ngFor="let label of labels;index as i">
+                <div (click)=" onActionClick($event,label._id)" data-toggle="tooltip" class="mr-1"
+                  title="{{label.name}}" style="width: auto;cursor: pointer;">
+                  {{label.name}}
+                </div>
+
+                <button type="button"
+                  class="chip__icon-wrap--right chip__icon-wrap--pointer icon icon--close icon--size-16px {{ label.color }}-chip--close"
+                  (click)="removeLabelById(label)"></button>
+                <div class="project-open-select" *ngIf="labelId==label._id && actionDropdown"
+                  (clickOutside)="actionDropdown=false">
+                  <span (click)="openUpdateLabelModal(label)"
+                    class="project-open-select-item d-flex justify-content-start">
+                    Edit
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <button type="button" class="button button--ghost button--medium" (click)="openCreateLabelModal()"><span
+                  class="button__icon icon icon--plus icon--size-16px"></span>
+                Create
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="settings-line mt--32"></div>
+        <button *ngIf="isProjectOwner"
+                [disabled]="!projectForm.dirty || projectForm.invalid"
+                type="submit"
+                class="button button--medium button--contained mt--16 pull-right"
+                (click)="onSaveChanges()">
+          Save changes
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<ng-template #createLabelForm class="modal-create-label" id="createLabelForm">
+  <ai-label-form [projectLabelList]='labels' [labelToEdit]='labelToEdit' (update)='updateLabel($event)'
+    (create)='createLabel($event)' [labelFormModalRef]='labelFormModalRef' [projectId]='projectId'> </ai-label-form>
+</ng-template>
+
+<ng-template #loader>
+  <ai-loading class="text-center"></ai-loading>
+</ng-template>
+
+<ai-generic-confirm #genericConfirm></ai-generic-confirm>

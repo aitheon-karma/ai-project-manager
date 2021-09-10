@@ -1,0 +1,43 @@
+<main *ngIf="!isLoading && !isError" class="container mt-5">
+  <h2>Project invite</h2>
+  <br>
+  <div class='row'>
+    <div class='col-12'>
+      <h3>Project Name : {{projectInvite.project.name}}</h3>
+
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-12'>
+      <h3> Invited By : {{projectInvite.organization.name}} </h3>
+    </div>
+  </div>
+
+  <div *ngIf="projectInvite.status == 'INVITED'" class="footer-invite">
+    <div class="row">
+      <div class="divider ml-3 mt-3"> Do you want to accept invitation?</div>
+    </div>
+    <div class="row">
+      <div class="d-flex justify-content-center  mt-2 ml-3">
+        <button (click)="updateProjectInvite({status : 'ACCEPTED' })"
+          class="btn btn-primary mr-3">Accept</button>
+        <button (click)="updateProjectInvite({status : 'REJECTED' })"
+          class="btn btn-outline mr-3">Reject</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="projectInvite.status == 'ACCEPTED' || projectInvite.status == 'REJECTED'" class="footer-invite">
+    <div class="row">
+      <div class=" expired-text divider ml-3 mt-3">Invitation was {{projectInvite.status}}.</div>
+    </div>
+  </div>
+</main>
+
+<div class="error" *ngIf="isError">
+  {{errorMessage}}
+</div>
+
+<div class="my-5" *ngIf="isLoading && !isError">
+  <ai-loading></ai-loading>
+</div>

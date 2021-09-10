@@ -1,0 +1,472 @@
+<div class="global-search-container" *ngIf="show" [@state]="state" (@state.done)="animationDone($event)">
+  <div class="global-search" [class.hidden]="hideResults">
+    <div  class="search-container search-container--outlined"
+          [class.search-container--filled]="searchText?.value">
+      <input  class="search-container__input"
+              type="search"
+              placeholder="Search task by Name or ID"
+              [formControl]="searchText"
+              #search>
+      <div class="search-container__button icon icon--search icon--size-16px"></div>
+      <div  class="search-container__button icon icon--close icon--dynamic icon--size-16px"
+            (click)="searchText.setValue('')"></div>
+    </div>
+    <span (click)="onCloseSearch()" class="search-container__icon-close icon icon--close ml-4"></span>
+  </div>
+
+  <div class="search-results__container" [class.hidden]="hideResults" [formGroup]="searchForm" *ngIf="!searchedForm?.dirty">
+    <div class="search-results__head">
+      <div class="search-results__section">
+        <div class="search-results__counter">
+          Search results: {{ activeFilters === 0 && searchText?.value?.length < 2 ? '0' : tasks?.length + archivedTasks?.length  }} {{ tasks?.length > 1 ? 'tasks' : 'task'}}
+        </div>
+        <div class="search-results__sort-section">
+          <label class="search-results__sort-label">Sort by:</label>
+          <div class="search-results__sort-container">
+            <ng-select  class="dropdown dropdown--outlined ngx-select-custom-width" formControlName="sort"
+                        [searchable]="false" placeholder="Select" bindLabel="name" bindValue="value">
+              <ng-option disabled>Date</ng-option>
+              <ng-option value='{ "createdAt" : -1 }'>Latest</ng-option>
+              <ng-option value='{ "createdAt" : 1 }'>Oldest</ng-option>
+              <ng-option value='{ "updatedAt" : -1 }'>Last modified</ng-option>
+              <ng-option disabled>Priority</ng-option>
+              <ng-option value='{ "orchestratorTask.priority" : -1 }'>Higher to Lower</ng-option>
+              <ng-option value='{ "orchestratorTask.priority" : 1 }'>Lower to Higher</ng-option>
+            </ng-select>
+          </div>
+          <button class="search-results__filters-icon icon icon--filter icon--size-24px icon--dynamic"
+                  tooltip="{{ showFilters ? 'Hide' : 'Show' }} Filters"
+                  [class.icon--active]="showFilters"
+                  (click)="toggleFilters()">
+            <div class="filters__counter" *ngIf="activeFilters > 0 && !showFilters">
+              {{ activeFilters }}
+            </div>
+          </button>
+          <button class="button button--ghost button--medium ml--16"
+                  [disabled]="!activeFilters" (click)="clearFilters()">
+            Clear filters
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="search-results__filters" [class.hidden]="!showFilters">
+      <div class="filters">
+        <div class="filters__container filters__container--compact-inside">
+          <ng-select class="dropdown dropdown--contained dropdown--outlined ngx-select-custom-width ngx-select-custom-width--user"
+                    [items]="assignees" bindLabel="name" bindValue="_id" placeholder="Assignee"
+                    [multiple]="true" #assigneeFilter formControlName="assignees">
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+              <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                <span class="ng-value-label"
+                      tooltip="{{ item.name }}"
+                      container="body">
+                  <div class="chip chip--icon-left chip--icon-right chip--contained"
+                      [class.chip--big]="items?.length < 2"
+                      [class.chip--medium]="items?.length == 2">
+                    <div class="chip__icon-wrap--left avatar avatar--16">
+                        <ngx-avatar name="{{ item.name }}"
+                                    size="16px"
+                                    textSizeRatio='3'
+                                    value="{{ item.name }}"
+                                    [src]="item.profile.avatarUrl">
+                        </ngx-avatar>
+                    </div>
+                    {{ item.name }}
+                    <button class="chip__icon-wrap--right icon icon--cancel-circle-f icon--size-16px"
+                            (click)="clear(item)" aria-hidden="true"></button>
+                  </div>
+                </span>
+              </div>
+              <div class="ng-value" *ngIf="items.length > 2">
+                <span class="ng-value-label chips-amount ml--4">+{{items.length - 2}}</span>
+              </div>
+              <ng-template ng-footer-tmp let-clear="clear">
+                <button class="button button--ghost button--small"
+                        (click)="resetSelect('assignees', assigneeFilter)">
+                  unselect all ({{ items.length }})
+                </button>
+              </ng-template>
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+              <div class="item item--avatar-text">
+                <ngx-avatar name="{{ item.name }}"
+                            size="16"
+                            value="{{ item.name }}"
+                            [src]="item.profile.avatarUrl">
+                </ngx-avatar>
+                {{ item.name }}
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="filters__container filters__container--compact-inside">
+          <ng-select class="dropdown dropdown--contained dropdown--outlined ngx-select-custom-width"
+                    [items]="labels"
+                    [multiple]="true"
+                    bindLabel="name"
+                    bindValue="_id"
+                    placeholder="Label"
+                    [closeOnSelect]="false"
+                    #filterLabel
+                    formControlName="labels">
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+              <div  class="ng-value" *ngFor="let item of items | slice:0:2"
+                    tooltip="{{item.name}}" container="body" placement="auto">
+                <span class="ng-value-label">
+                  <div  class="chip {{ item.color }}-chip chip--icon-right"
+                        [class.chip--big]="items?.length < 2"
+                        [class.chip--medium]="items?.length == 2">
+                    {{item.name}}
+                    <button class="chip__icon-wrap--right icon icon--cancel-circle-f icon--size-16px {{ item.color }}-close"
+                            (click)="clear(item)" aria-hidden="true"></button>
+                  </div>
+                </span>
+              </div>
+              <div class="ng-value" *ngIf="items.length > 2">
+                <span class="ng-value-label chips-amount ml--4">+{{items.length - 2}}</span>
+              </div>
+              <ng-template ng-footer-tmp let-clear="clear">
+                <button class="button button--ghost button--small"
+                        (click)="resetSelect('labels', filterLabel)">
+                  unselect all ({{ items.length }})
+                </button>
+              </ng-template>
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+              <div class="item item--label">
+                <div class="item__label-marker {{ item.color }}"></div>
+                {{item.name}}
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="filters__container filters__container--compact-inside">
+          <ng-select class="dropdown dropdown--contained dropdown--outlined ngx-select-custom-width ngx-select-custom-width--task-type"
+                    [multiple]="true"
+                    placeholder="Project"
+                    [items]="projects"
+                    bindLabel="name"
+                    bindValue="_id"
+                    #projectsFilter
+                    formControlName="projects">
+            <ng-template ng-option-tmp let-item="item">
+              <span
+                tooltip="{{ item.name.length < 34 ? null : item.name }}"
+                container="body"
+                class="option-label">
+                {{item.name.length < 34 ? item.name : (item.name | slice : 0:34) + '...'}}
+              </span>
+            </ng-template>
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+              <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                <span class="ng-value-label">
+                  <div  class="chip chip--icon-right chip--outlined"
+                        [class.chip--big]="items?.length < 2"
+                        [class.chip--medium]="items?.length == 2">
+                    {{ item.name | titlecase }}
+                    <button class="chip__icon-wrap--right icon icon--cancel-circle-f icon--size-16px"
+                      (click)="clear(item)" aria-hidden="true"></button>
+                  </div>
+                </span>
+              </div>
+              <div class="ng-value" *ngIf="items.length > 2">
+                <span class="ng-value-label chips-amount">+{{items.length - 2}}</span>
+              </div>
+
+              <ng-template ng-footer-tmp let-clear="clear">
+                <button class="button button--ghost button--small"
+                        (click)="resetSelect('projects', taskTypesFilter)">
+                  unselect all ({{ items.length }})
+                </button>
+              </ng-template>
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="filters__container filters__container--compact-inside">
+          <ng-select class="dropdown dropdown--contained dropdown--outlined ngx-select-custom-width ngx-select-custom-width--user"
+                    [items]="createdBy" bindLabel="name" bindValue="_id" placeholder="Created By"
+                    [multiple]="true" #createdByFilter formControlName="createdBy">
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+              <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                <span class="ng-value-label"
+                      tooltip="{{ item.name }}"
+                      container="body">
+                  <div  class="chip chip--icon-left chip--icon-right chip--contained"
+                        [class.chip--big]="items?.length < 2"
+                        [class.chip--medium]="items?.length == 2">
+                    <div class="chip__icon-wrap--left avatar avatar--16">
+                        <ngx-avatar name="{{ item.name }}"
+                                    size="16"
+                                    textSizeRatio='11px'
+                                    value="{{ item.name }}"
+                                    [src]="item.profile.avatarUrl">
+                        </ngx-avatar>
+                    </div>
+                    {{ item.name }}
+                    <button class="chip__icon-wrap--right icon icon--cancel-circle-f icon--size-16px"
+                            (click)="clear(item)" aria-hidden="true"></button>
+                  </div>
+                </span>
+              </div>
+              <div class="ng-value" *ngIf="items.length > 2">
+                <span class="ng-value-label chips-amount ml--4">+{{items.length - 2}}</span>
+              </div>
+              <ng-template ng-footer-tmp let-clear="clear">
+                <button class="button button--ghost button--small"
+                        (click)="resetSelect('createdBy', createdByFilter)">
+                  unselect all ({{ items.length }})
+                </button>
+              </ng-template>
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+              <div class="item item--avatar-text">
+                <ngx-avatar name="{{ item.name }}"
+                            size="16px"
+                            value="{{ item.name }}"
+                            [src]="item.profile.avatarUrl">
+                </ngx-avatar>
+                {{ item.name }}
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="filters__container mb-0">
+          <ng-select class="dropdown dropdown--contained dropdown--outlined ngx-select-custom-width ngx-select-custom-width--task-type"
+                    [multiple]="true" placeholder="Task Type" [items]="types" bindLabel="label"
+                    bindValue="value" [searchable]="false" #taskTypesFilter formControlName="types">
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+              <div class="ng-value" *ngFor="let item of items | slice:0:2">
+                <span class="ng-value-label">
+                  <div class="chip chip--icon-right chip--outlined">
+                    {{ item.label | titlecase }}
+                    <button class="chip__icon-wrap--right icon icon--cancel-circle-f icon--size-16px"
+                      (click)="clear(item)" aria-hidden="true"></button>
+                  </div>
+                </span>
+              </div>
+              <div class="ng-value" *ngIf="items.length > 2">
+                <span class="ng-value-label chips-amount">+{{items.length - 2}}</span>
+              </div>
+              <ng-template ng-footer-tmp let-clear="clear">
+                <button class="button button--ghost button--small"
+                        (click)="resetSelect('types', taskTypesFilter)">
+                  unselect all ({{ items.length }})
+                </button>
+              </ng-template>
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="filters__container mb-0">
+          <ng-select class="dropdown dropdown--contained dropdown--outlined ngx-select-custom-width"
+                    [multiple]="true" placeholder="Priority" [items]="priorities" bindLabel="name"
+                    bindValue="value" [searchable]="false" #taskPropertiesFilter ormControlName="priorities">
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+              <div class="ng-value" *ngFor="let item of items | slice:0:1">
+                <span class="ng-value-label">
+                  <div class="chip chip--icon-right chip--outlined">
+                    {{ item.name }}
+                    <button class="chip__icon-wrap--right icon icon--cancel-circle-f icon--size-16px"
+                            (click)="clear(item)" aria-hidden="true"></button>
+                  </div>
+                </span>
+              </div>
+              <div class="ng-value" *ngIf="items.length > 1">
+                <span class="ng-value-label chips-amount">+{{items.length - 1}}</span>
+              </div>
+              <ng-template ng-footer-tmp let-clear="clear">
+                <button class="button button--ghost button--small"
+                        (click)="resetSelect('priorities', taskPropertiesFilter)">
+                  unselect all ({{ items.length }})
+                </button>
+              </ng-template>
+            </ng-template>
+          </ng-select>
+        </div>
+      </div>
+    </div>
+
+    <div  class="search-results__results-list results" [class.results--filters-open]="showFilters"
+          *ngIf="(activeFilters || searchText?.value?.length > 1) && (tasks?.length || archivedTasks?.length) && !loading">
+      <div class="results__task task" *ngFor="let task of tasks" (click)="openTaskModal(task)">
+        <div class="task__stage-info" tooltip="{{ task.stageName }}" container="body" placement="auto">
+          <span class="task__stage-color" [style.background]="task.stageColor"></span>
+        </div>
+        <div  class="task__tick-icon" *ngIf="!task?.parent">
+          <span class="icon icon--size-16px icon--white icon--tick"></span>
+        </div>
+        <div  class="task__subtask-icon" *ngIf="task?.parent">
+          <span class="icon icon--subtask"></span>
+        </div>
+        <div class="task__ref" [innerHTML]="highlightText(task?.reference) | safeHTML">
+          {{ task?.reference }}
+        </div>
+        <div  *ngIf="task?.orchestratorTask?.priority"
+              class="task__priority" container="body"
+              placement="auto"
+              tooltip="{{ getPriorityTooltip(task?.orchestratorTask?.priority) }}"
+              [ngClass]="{  'green': task?.orchestratorTask?.priority == 1,
+                            'yellow': task?.orchestratorTask?.priority == 2,
+                            'orange': task?.orchestratorTask?.priority == 3,
+                            'red': task?.orchestratorTask?.priority == 4}">
+            <span class="icon icon--arrow-up">
+            </span>
+        </div>
+        <div class="task__status">
+          {{ task.stageName | titlecase }}
+        </div>
+        <div  class="task__name"
+              [innerHTML]="highlightText(task?.orchestratorTask?.name) | safeHTML"></div>
+        <div class="task__labels">
+          <div class="task__label" *ngFor="let label of task?.labels | slice:0:3">
+            <div  class="task__chip-label chip-label chip--selected {{label.color}}-chip mr--8"
+                  [class.task__chip-label--big]="task?.labels?.length < 2"
+                  [class.task__chip-label--medium]="task?.labels?.length == 2"
+                  [class.task__chip-label--small]="task?.labels?.length == 3"
+                  [tooltip]="label.name" container="body" placement="auto">
+              {{ label.name }}
+            </div>
+          </div>
+          <span class="task__labels-counter"
+                [tooltip]="popTemplate"
+                *ngIf="task?.labels?.length > 3"
+                container="body"
+                containerClass="globalSearchLabelsTooltip"
+                placement="auto"
+                [adaptivePosition]="false">
+            + {{ task?.labels?.length - 3 }}
+          </span>
+          <ng-template #popTemplate><div class="d-flex justify-content-start" [innerHtml]="getOtherLabels(task?.labels)"></div></ng-template>
+        </div>
+        <div class="task__right-side">
+          <div  class="task__attachment icon icon--attach" *ngIf="task?.orchestratorTask?.files?.length > 0"
+                tooltip="Task has attachments" container="body" placement="auto">
+          </div>
+          <div  class="task__comments" container="body" *ngIf="task?.commentsCount" placement="auto"
+                tooltip="Task has {{ task?.commentsCount }} {{ task?.commentsCount == 1 ? 'comment' : 'comments' }}">
+            <span class="icon icon--comment"></span>
+            {{ task?.commentsCount }}
+          </div>
+          <div class="task__assigned" *ngIf="task?.orchestratorTask?.assigned?.length">
+            <ng-container *ngFor="let member of task?.orchestratorTask?.assigned; let i = index;">
+              <ng-container *ngIf=" i< 5">
+                  <img  *ngIf="member?.profile?.avatarUrl"
+                        class="task__assignee"
+                        [ngStyle]="{'z-index': (5 - i)}"
+                        src="{{member?.profile?.avatarUrl}}"
+                        tooltip="{{ member.profile?.firstName + ' ' + member.profile?.lastName }}"
+                        container="body" placement="auto">
+                  <span *ngIf="member?.profile?.avatarUrl == '' || !member?.profile?.avatarUrl"
+                        class="task__assignee task__assignee--text"
+                        [ngStyle]="{'background-color': getRandomColor(i),'z-index': (5 - i)}"
+                        tooltip="{{ member.profile?.firstName + ' ' + member.profile?.lastName }}"
+                        container="body" placement="auto">
+                    {{ member?.profile?.firstName ? getInitials(member?.profile?.firstName) : '' }}
+                </span>
+              </ng-container>
+            </ng-container>
+            <span class="task__assignee-plus" *ngIf="task?.orchestratorTask?.assigned.length > 5" placement="auto"
+                  [tooltip]="getOtherAssignees(task?.orchestratorTask?.assigned)" container="body">
+              +{{ task?.orchestratorTask?.assigned.length - 5 }}
+            </span>
+          </div>
+          <div class="task__parent-section" *ngIf="task?.parent">
+            <span class="task__parent-title">Parent</span>
+            <span class="task__parent-ref" [innerHTML]="highlightText(task?.parent?.reference) | safeHTML"></span>
+          </div>
+        </div>
+      </div>
+      <div class="results__archived-tasks" *ngIf="archivedTasks?.length">
+        <div class="results__archived-tasks-title">Archived Tasks ({{archivedTasks?.length}})</div>
+        <div class="results__task task task--archived" *ngFor="let task of archivedTasks" (click)="openTaskModal(task)">
+          <div class="task__stage-info" tooltip="{{ task.stageName }}" container="body">
+            <span class="task__stage-color" [style.background]="task.stageColor"></span>
+          </div>
+          <div class="task__ref" [innerHTML]="highlightText(task?.reference) | safeHTML">
+            <div class="task__tick-icon">
+              <span class="icon icon--size-16px icon--white icon--tick"></span>
+            </div>
+            {{ task?.reference }}
+          </div>
+          <div  *ngIf="task?.orchestratorTask?.priority"
+                class="task__priority" container="body" placement="auto"
+                tooltip="{{ getPriorityTooltip(task?.orchestratorTask?.priority) }}"
+                [ngClass]="{  'green': task?.orchestratorTask?.priority == 1,
+                              'yellow': task?.orchestratorTask?.priority == 2,
+                              'orange': task?.orchestratorTask?.priority == 3,
+                              'red': task?.orchestratorTask?.priority == 4}">
+              <span class="icon icon--arrow-up">
+              </span>
+          </div>
+          <div class="task__name" [innerHTML]="highlightText(task?.orchestratorTask?.name) | safeHTML"></div>
+          <div class="task__labels">
+            <div class="task__label" *ngFor="let label of task?.labels | slice:0:3">
+              <div  class="task__chip-label chip-label chip--selected {{label.color}}-chip mr--8"
+                    [class.task__chip-label--big]="task?.labels?.length < 2"
+                    [class.task__chip-label--medium]="task?.labels?.length == 2"
+                    [class.task__chip-label--small]="task?.labels?.length == 3"
+                    [tooltip]="label.name" container="body" placement="auto">
+                {{ label.name }}
+              </div>
+            </div>
+            <span class="task__labels-counter"
+                  [tooltip]="popTemplate"
+                  *ngIf="task?.labels?.length > 3"
+                  container="body"
+                  containerClass="globalSearchLabelsTooltip"
+                  placement="auto"
+                  [adaptivePosition]="false">
+              + {{ task?.labels?.length - 3 }}
+            </span>
+            <ng-template #popTemplate><div class="d-flex justify-content-start" [innerHtml]="getOtherLabels(task?.labels)"></div></ng-template>
+          </div>
+          <div class="task__right-side">
+            <div  class="task__attachment icon icon--attach" *ngIf="task?.orchestratorTask?.files?.length > 0"
+                  tooltip="Task has attachments" container="body" placement="auto">
+            </div>
+            <div  class="task__comments" container="body" *ngIf="task?.commentsCount" placement="auto"
+                  tooltip="Task has {{ task?.commentsCount }} {{ task?.commentsCount == 1 ? 'comment' : 'comments' }}">
+              <span class="icon icon--comment"></span>
+              {{ task?.commentsCount }}
+            </div>
+            <div class="task__assigned" *ngIf="task?.orchestratorTask?.assigned?.length">
+              <ng-container *ngFor="let member of task?.orchestratorTask?.assigned; let i = index;">
+                <ng-container *ngIf=" i< 5">
+                    <img  *ngIf="member?.profile?.avatarUrl"
+                          class="task__assignee"
+                          [ngStyle]="{'z-index': (5 - i)}"
+                          src="{{member?.profile?.avatarUrl}}"
+                          tooltip="{{ member.profile?.firstName + ' ' + member.profile?.lastName }}"
+                          container="body" placement="auto">
+                    <span *ngIf="member?.profile?.avatarUrl == '' || !member?.profile?.avatarUrl"
+                          class="task__assignee task__assignee--text"
+                          [ngStyle]="{'background-color': getRandomColor(i),'z-index': (5 - i)}"
+                          tooltip="{{ member.profile?.firstName + ' ' + member.profile?.lastName }}"
+                          container="body" placement="auto">
+                      {{ member?.profile?.firstName ? getInitials(member?.profile?.firstName) : '' }}
+                  </span>
+                </ng-container>
+              </ng-container>
+              <span class="task__assignee-plus" *ngIf="task?.orchestratorTask?.assigned.length > 5"
+                    [tooltip]="getOtherAssignees(task?.orchestratorTask?.assigned)" container="body" placement="auto">
+                +{{ task?.orchestratorTask?.assigned.length - 5 }}
+              </span>
+            </div>
+            <div class="task__parent-section" *ngIf="task?.parent">
+              <span class="task__parent-title">Parent</span>
+              <span class="task__parent-ref" [innerHTML]="highlightText(task?.parent?.reference) | safeHTML"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ai-task-modal (modalClose)="getSearchData(text, finalForm)"></ai-task-modal>
+
+<ng-template [ngIf]="loading && show">
+  <div class="loading-container loading-container--clear" [class.hidden]="hideResults">
+      <ai-loading></ai-loading>
+  </div>
+</ng-template>

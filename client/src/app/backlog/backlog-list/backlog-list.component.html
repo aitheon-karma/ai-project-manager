@@ -1,0 +1,85 @@
+<ai-filters-panel [projectData]="projectData"
+                  (openEditStageModal)="null"
+                  (filterData)="setBacklogList($event)">
+</ai-filters-panel>
+<div class="container backlog p-0 mt--24">
+  <div class="row mx-0 backlog__section"
+      [class.backlog__section--transparent]="isLoading">
+    <div class="p--16 d-flex w-100">
+      <div *ngIf='!isLoading; else loader' class="w-100 backlog-list">
+        <div *ngFor='let listItem of list'>
+          <div class="list">
+            <div class="d-flex align-items-center justify-content-start list__header"
+                 (click)="listItem.toggle =! listItem.toggle">
+              <span [ngClass]="listItem.toggle ? 'icon--arrow-drop-down' : 'icon--arrow-drop-right'"
+                    class="icon icon--size-24px mr--4"
+                    data-toggle="tooltip"
+                    title="{{listItem.toggle?'Collapse':'Expand'}}"
+                    data-placement="top">
+              </span>
+              <span class="list__header__name"
+                    title="{{listItem.toggle?'Collapse':'Expand'}}">
+                {{ listItem.name }}
+              </span>
+              <span class="ml--8 mt--4">
+                ( {{ listItem.array.length }} )
+              </span>
+            </div>
+            <ng-container *ngIf="listItem.toggle">
+              <div *ngIf='listItem?.array?.length > 0' class="mt--16 d-flex flex-column w-100 backlog-items">
+                <div class="item backlog-item"
+                     *ngFor="let backlogTask of listItem.array"
+                     (click)="openTaskModal(backlogTask)">
+                  <div class="status" [style.background]="setPriorityColor(backlogTask?.orchestratorTask?.priority)"></div>
+                  <div class="backlog-item__icon" [style.background]="listItem?.bgcolor">
+                    <span class="icon icon--size-16px icon--white {{listItem?.icon}}"></span>
+                  </div>
+                  <div class="backlog-item__name">
+                    {{ backlogTask?.reference }}
+                  </div>
+                  <div class="backlog-item__detail">
+                    {{ backlogTask?.orchestratorTask?.name }}
+                  </div>
+                  <div class="d-flex align-items-center" *ngIf="backlogTask?.subTasks.length > 0">
+                    <div class="d-flex align-items-center justify-content-start pl--16" *ngFor="let subTask of backlogTask?.subTasks">
+                      <span class="icon icon--subtask mr--4"></span>
+                      <small>{{ subTask?.reference }}</small>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center justify-content-start pl--16"
+                       style="min-width: 54px"
+                       *ngIf="backlogTask?.commentsCount">
+                    <span class="icon icon--comment mr--4"></span>
+                    <small>{{ backlogTask?.commentsCount }}</small>
+                  </div>
+                  <div class="d-flex align-items-center justify-content-start ml--16"
+                       *ngIf="backlogTask?.dependents?.length > 0"
+                       (click)="onActionClick($event, backlogTask)">
+                    <span class="icon icon--size-16px icon--white icon--subtask mr--4"></span>
+                    <small>{{ backlogTask?.dependents?.length }}</small>
+                  </div>
+                  <div class="ml--16 backlog-item__assigned" *ngIf='backlogTask?.orchestratorTask?.assigned?.length'>
+                    <ngx-avatar name="{{backlogTask?.orchestratorTask?.assigned[0]?.profile?.firstName}} {{backlogTask?.orchestratorTask?.assigned[0]?.profile?.lastName}}"
+                                size="24px"
+                                value="{{backlogTask?.orchestratorTask?.assigned[0]?.profile?.firstName}} {{backlogTask?.orchestratorTask?.assigned[0]?.profile?.lastName}}"
+                                [src]="backlogTask?.orchestratorTask?.assigned[0]?.profile?.avatarUrl">
+                    </ngx-avatar>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="listItem?.array?.length == 0  && !isLoading" class="mt--16 d-flex w-100">
+                <span class="item backlog-item">No backlog found</span>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ai-task-modal (modalClose)="setBacklogList(mainFilters)"></ai-task-modal>
+
+<ng-template #loader>
+  <ai-loading class="ml-auto mr-auto"></ai-loading>
+</ng-template>

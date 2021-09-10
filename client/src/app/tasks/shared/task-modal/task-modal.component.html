@@ -1,0 +1,79 @@
+<ng-template #taskModal>
+  <div class="modal-content" *ngIf="taskModalRef && taskFormShown">
+    <div class="modal-header">
+      <h4 class="modal-title pull-left d-flex align-items-center">
+        <div class="tick-icon" *ngIf="params.taskReference">
+          <span class="icon icon--size-16px icon--white icon--tick"></span>
+        </div>
+        <button type="button" *ngIf="params.parentReference"
+                (click)="changeToParent()"
+                class="button button--ghost button--custom-link">
+          {{  params.parentReference  }}
+        </button>
+        {{ params.parentReference ? ' /' : '' }} {{ params.taskReference ? params.taskReference  : 'New Task' }}
+        <label class="form-label mb-0 pl--4" *ngIf="readOnly">(No Project Access)</label>
+      </h4>
+      <button class="button button--ghost button--medium ml-auto"
+              *ngIf="params.taskReference"
+              (click)="copyLink()">
+        <span class="icon icon--link icon--gold mr-2"></span>
+        Copy link
+      </button>
+      <div class="d-flex align-items-center">
+        <button *ngIf="!params.parentReference && !readOnly"
+                [hidden]="!params.taskReference"
+                class="icon icon--add-sub-task icon--dynamic ml--16"
+                (click)="toggleSubTask()"
+                [class.icon--active-open]="subTaskMode"
+                tooltip='Create subtask'
+                delay="1000"
+                placement="bottom">
+        </button>
+        <button  type="button" *ngIf="!readOnly"
+                 [hidden]="!params.taskReference"
+                 class="icon icon--delete icon--dynamic ml--16"
+                 [class.icon--disabled]="!isCreator && !isUserAdmin"
+                 [disabled]="!isCreator && !isUserAdmin"
+                 (click)="onRemoveTask()"
+                 tooltip="Delete {{ taskRole }}"
+                 delay="1000"
+                 placement="bottom">
+        </button>
+        <!--
+        <button  type="button" *ngIf="!readOnly"
+                 [hidden]="!params.taskReference"
+                 class="icon icon--more icon--dynamic ml--16"
+                 [class.icon--active]="showTaskMenu"
+                 [class.icon--disabled]="!isCreator && !isUserAdmin"
+                 [disabled]="!isCreator && !isUserAdmin"
+                 (click)="openTaskMenu($event)">
+        </button>
+        <div class="task-menu"
+             *ngIf="showTaskMenu">
+          <span class="task-menu__item"
+                (click)="onRemoveTask()">
+            Delete
+          </span>
+        </div>
+        -->
+        <button type="button"
+                class="icon icon--close icon--dynamic ml--16"
+                (click)="!params?.taskReference && valueInNewTaskChanged?.length > 0 ? cancel() : close()"
+                aria-label="Close">
+        </button>
+      </div>
+    </div>
+
+    <ai-task-form [params]="params"
+                  (saved)="save($event)"
+                  (readOnly)="readOnly = true"
+                  [subTaskMode]="subTaskMode"
+                  *ngIf="taskModalRef"
+                  (canceled)="cancel($event)"
+                  (taskDetails)="checkUserRights($event)"
+                  (valueInNewTaskChanged)="getValueInNewTaskChanged($event)"
+                  #taskForm></ai-task-form>
+  </div>
+</ng-template>
+
+<ai-generic-confirm #genericConfirm></ai-generic-confirm>

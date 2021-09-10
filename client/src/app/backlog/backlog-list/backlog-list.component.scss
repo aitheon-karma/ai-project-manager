@@ -1,0 +1,215 @@
+.backlog {
+
+  &__dropdown {
+    border-radius: 2px;
+    border: 1px solid rgb(69, 69, 69);
+    width: 240px;
+    margin-right: 8px;
+    padding: 0;
+  }
+
+  &__section {
+    background: rgb(43, 43, 43);
+    border-radius: 0 0 2px 2px;
+    height: auto;
+    margin: 16px 0;
+
+    &--transparent {
+      background: transparent;
+    }
+
+    .list-des {
+      margin-left: 16px;
+      color: rgb(126, 126, 126);
+      font-size: 14px;
+      font-weight: normal;
+      height: 20px;
+      letter-spacing: 0.2px;
+      line-height: 20px;
+    }
+  }
+}
+
+.backlog-list {
+  div:not(:last-child) .list {
+    margin-bottom: 24px;
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  &__header {
+    color: rgb(126, 126, 126);
+    font-size: 14px;
+    letter-spacing: 0.2px;
+    line-height: 20px;
+    user-select: none;
+    cursor: pointer;
+
+    &__name {
+      color: #fff;
+      font-size: 18px;
+      letter-spacing: 0;
+      line-height: 28px;
+    }
+  }
+}
+
+.backlog-item {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-height: 40px;
+  margin-bottom: 4px;
+  background-color: #383838;
+  border-radius: 2px;
+  cursor: pointer;
+  overflow: hidden;
+  color: #fff;
+  font-size: 14px;
+  letter-spacing: 0.2px;
+  line-height: 20px;
+  padding: 8px 16px;
+  align-items: center;
+  user-select: none;
+  white-space: nowrap;
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 2px;
+    margin-right: 16px;
+
+    .icon {
+      width: 12px;
+      height: 12px;
+      max-height: 12px;
+      font-size: 12px;
+      line-height: 12px;
+    }
+  }
+
+  &__name {
+    margin-right: 16px;
+    min-width: 48px;
+  }
+
+  &__detail {
+    margin-right: auto;
+    max-width: 80%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__assigned ::ng-deep .avatar-content {
+    min-width: 24px;
+    min-height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+  }
+
+  small {
+    font-size: 10px;
+    line-height: 16px;
+  }
+
+  .status {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+  }
+}
+
+//labels
+.bg-fire-chip {
+  border: 1px solid #e96058;
+  color: #e96058 !important;
+}
+.bg-orange-chip {
+  border: 1px solid #ed9438;
+  color: #ed9438 !important;
+}
+.bg-banana-chip {
+  border: 1px solid #f5ba06;
+  color: #f5ba06 !important;
+}
+.bg-olive-chip {
+  border: 1px solid #b1c82f;
+  color: #b1c82f !important;
+}
+.bg-frog-chip {
+  border: 1px solid #67b231;
+  color: #67b231 !important;
+}
+.bg-arctic-chip {
+  border: 1px solid #1ac0c9;
+  color: #1ac0c9 !important;
+}
+.bg-sky-chip {
+  border: 1px solid #589be9 ;
+  color: #589be9 !important;
+}
+.bg-iris-chip {
+  border: 1px solid #6278c4;
+  color: #6278c4 !important;
+}
+.bg-violet-chip {
+  border: 1px solid #8c58e9;
+  color: #8c58e9 !important;
+}
+.bg-purple-chip {
+  border: 1px solid #ca58e9;
+  color: #ca58e9 !important;
+}
+.bg-lavender-chip {
+  border: 1px solid #f39aba;
+  color: #f39aba !important;
+}
+
+.bg-fire {
+  background-color: #e96058;
+}
+.bg-orange {
+  background-color: #ed9438;
+}
+.bg-banana {
+  background-color: #f5ba06;
+}
+.bg-olive {
+  background-color: #b1c82f;
+}
+.bg-frog {
+  background-color: #67b231;
+}
+.bg-arctic {
+  background-color: #1ac0c9;
+}
+.bg-sky {
+  background-color: #589be9;
+}
+.bg-iris {
+  background-color: #6278c4;
+}
+.bg-violet {
+  background-color: #8c58e9;
+}
+.bg-purple {
+  background-color: #ca58e9;
+}
+.bg-lavender {
+  background-color: #f39aba;
+}
+
+.backlog-items .backlog-item:last-child {
+  margin-bottom: 0
+}

@@ -1,0 +1,97 @@
+<a class="card-task"
+href="/projects/{{task.project._id}}/boards/{{task.board}}?task={{task.reference}}"
+[class.parent-card]="task ?.parent"
+(click)="clickTask($event)">
+
+  <span class="parent-task-ref"
+        *ngIf="task?.parent">
+    {{ task?.parent?.reference }} Subtask
+  </span>
+  <div  class="card-detail"
+        (click)="openModal.emit(task)"
+        [style.border-left-color]="stage?.color">
+      <div  class="task__stage-hover-area"
+            tooltip="{{stage?.name}}"
+            container="body"
+            placement="bottom"></div>
+      <div class="row justify-content-between mx-0 mb--8">
+        <div class="col-12 p-0">
+          <div class="d-flex justify-content-start align-items-center pb--4">
+            <div class="d-flex align-items-center"
+                 tooltip="{{project.name}}"
+                 container="body">
+              <div class="card-detail__icon"
+                   [style.background]="bgcolor">
+                <span class="icon icon--size-16px icon--white {{icon}}"></span>
+              </div>
+              <span class="card-detail__prefix"
+                    [class.card-detail__prefix--border]="task?.epic">
+                {{ task?.reference }}
+              </span>
+            </div>
+            <div  *ngIf="task?.epic"
+                  class="card-detail__epics"
+                  tooltip="{{task?.epic?.name}}"
+                  container="body">
+              <div class="card-detail__icon">
+                <span class="icon icon--size-16px icon--white icon--epic"></span>
+              </div>
+              <span class="card-detail__epic">
+                {{task?.epic?.reference}}
+              </span>
+            </div>
+          </div>
+          <span class="card-detail__title truncate-overflow">
+            {{ task?.name }}
+          </span>
+          <div *ngIf="task?.labels?.length">
+            <span *ngFor="let label of task.labels" class="mr--4 mb--8 chip-label {{label.color}}">
+              {{label?.name }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="row mx-0 d-flex align-items-left flex-wrap">
+        <div class="task__members-section" *ngIf="task?.assigned?.length">
+          <div  *ngFor="let assignee of task?.assigned | slice:0:3; let i = index"
+                [tooltip]="assignee.profile?.firstName +' '+assignee.profile?.lastName"
+                placement="top"
+                container="body"
+                class="task__avatar"
+                [ngStyle]="{'z-index': (3 - i)}">
+            <ngx-avatar name="{{assignee.profile?.firstName}}
+                              {{assignee.profile?.lastName}}"
+                        size="24px"
+                        value=" {{assignee.profile?.firstName}}
+                                {{assignee.profile?.lastName}}"
+                        [src]="assignee.profile?.avatarUrl"> </ngx-avatar>
+          </div>
+          <span class="task__members-more"
+                *ngIf="task?.assigned?.length >= 4">+{{ task?.assigned.length - 3 }}</span>
+        </div>
+        <div  class="task__priority"
+              *ngIf="task?.priority"
+              tooltip="{{ priority }}"
+              [ngClass]="{  'green': task.priority == 1,
+                            'yellow': task.priority == 2,
+                            'orange': task.priority == 3,
+                            'red': task.priority == 4}">
+          <span class="icon icon--arrow-up">
+          </span>
+        </div>
+        <div class="d-flex justify-content-end align-items-center ml-auto">
+          <div class="icon icon--hierarchy-tree ml--16" *ngIf="task?.dependents?.length > 0"></div>
+          <div class="icon icon--attach ml--16" *ngIf="task?.files?.length > 0"></div>
+          <div class="icon icon--comment ml--16 mr--4" *ngIf="task?.comments?.length > 0"></div>
+          <div *ngIf="task?.comments?.length > 0">
+            <small>{{task.comments?.length}}</small>
+          </div>
+        </div>
+        <div  class="comments-section"
+              *ngIf="task?.commentsCount > 0">
+          <div class="icon icon--comment mr-1"></div>
+          <div class="comment-counter">{{ task.commentsCount }}</div>
+        </div>
+      </div>
+  </div>
+</a>

@@ -1,0 +1,97 @@
+<div class="epics-dashboard">
+  <div  class='row epics-dashboard__head'
+        *ngIf="epicsList.length && !loading">
+    <h2 class='epics-dashboard__title m-0'
+        *ngIf="epicsStatus == 'ACTIVE'">
+      Epics ({{ epicsList.length }})
+    </h2>
+    <h2 class='epics-dashboard__title m-0'
+        *ngIf="epicsStatus == 'ARCHIVED'">
+      Archived epics ({{ epicsList.length }})
+    </h2>
+    <div  class="epics-dashboard__head-right"
+          *ngIf="epicsStatus == 'ACTIVE'">
+      <button type="submit"
+              class="button button--contained button--medium"
+              (click)="openEpicForm()">
+        <span class="icon icon--plus icon--size-16px button__icon"></span>
+        Create epic
+      </button>
+    </div>
+  </div>
+</div>
+
+<div  class="epics-dashboard__list"
+      *ngIf="epicsList.length && !loading">
+  <ng-container *ngFor="let epic of epicsList">
+    <ai-epic-card [epic]="epic"
+                  [activeEpic]="activeEpic"
+                  (epicForModal)="openEpicForm($event)"
+                  (changedEpic)="cangeEpicStatus($event)"
+                  (selectedEpic)="getSelectedEpic($event)"></ai-epic-card>
+  </ng-container>
+</div>
+
+<!-- <div  class="epics-dashboard__list--epmty"
+      *ngIf="!epicsList.length && !loading">
+  No Epics yet
+</div> -->
+
+<div  class="epics-dashboard__empty"
+      *ngIf="!epicsList.length && !loading">
+  <div class="epics-dashboard__empty-img"></div>
+  <div  class="epics-dashboard__empty-text" *ngIf="epicsStatus === 'ACTIVE'">No epics yet</div>
+  <div  class="epics-dashboard__empty-text" *ngIf="epicsStatus === 'ARCHIVED'">No archived epics yet</div>
+  <button type="submit"
+          class="button button--contained button--medium"
+          (click)="openEpicForm()"
+          *ngIf="epicsStatus == 'ACTIVE'">
+    <span class="icon icon--plus icon--size-16px button__icon"></span>
+    Create epic
+  </button>
+</div>
+
+<ng-template #epicModal>
+  <div class="modal-header">
+      <h4 class="modal-title pull-left">{{ epic ? 'Update Epic': 'New Epic' }} </h4>
+      <button type="button" class="icon icon--close icon--dynamic" aria-label="Close" (click)="closeEpicModal()">
+      </button>
+  </div>
+  <div class="modal-body">
+    <ai-epic-form #epicForm
+                  [epic]="epic"
+                  (formDirty)="isFormDirty($event)"
+                  (closeModal)="closeEpicModal()"
+                  (createdEpic)="getEpics($event)"></ai-epic-form>
+  </div>
+  <div  class="modal-footer"
+        [class.justify-content-between]="epic">
+    <button class="button button--ghost button--error button--medium"
+            (click)="cangeEpicStatus({epic: epic, status: epic.status  === 'ACTIVE' ? 'ARCHIVED' : 'DELETED' })"
+            *ngIf="epic">
+      {{ epic.status === 'ACTIVE' ? 'Archive' : 'Delete' }}
+    </button>
+    <button class="button button--ghost mr--8 button--medium"
+            (click)="closeEpicModal()"
+            [class.ml-auto]="epic">
+      Cancel
+    </button>
+    <button class="button button--contained button--medium"
+            (click)="createEpic(epicForm)"
+            [disabled]="!formDirty"
+            *ngIf="!epic && !epicForm.isEpicLoading">
+      Create
+    </button>
+    <button class="button button--contained button--medium"
+            (click)="updateEpic(epicForm)"
+            *ngIf="epic && !epicForm.isEpicLoading">
+      Update
+    </button>
+  </div>
+</ng-template>
+
+<ai-generic-confirm #genericConfirm></ai-generic-confirm>
+
+<div class="loading-container" *ngIf="loading">
+  <ai-loading></ai-loading>
+</div>

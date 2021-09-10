@@ -1,0 +1,73 @@
+.settings-title {
+  color: #fff;
+  font-size: 24px;
+  font-weight: normal;
+  letter-spacing: 0;
+  line-height: 32px;
+}
+
+.settings-info {
+  color: rgb(126, 126, 126);
+  font-size: 14px;
+  letter-spacing: 0.2px;
+  line-height: 20px;
+}
+
+.settings-line {
+  background: rgb(69, 69, 69);
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+  height: 1px;
+  width: 100%;
+}
+
+.access {
+
+  &__radioTab {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 16px;
+    background: #181818;
+    border-radius: 2px;
+    border: 1px solid rgb(69, 69, 69);
+    cursor: pointer;
+
+    &:hover {
+      border: 1px solid #dcbc65;
+    }
+  }
+}
+
+.title {
+  color: #ffffff;
+  font-size: 14px;
+  letter-spacing: 0.2px;
+}
+
+.description {
+  color: #7e7e7e;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+}
+
+.radioDescription {
+  padding-top: 12px;
+  font-weight: normal;
+  padding-left: 0;
+}
+
+.radio {
+  height: 14px;
+  width: 14px;
+
+  input {
+    top: -3px;
+  }
+}
+
+.border {
+  border: 1px solid #dcbc65 !important;
+}

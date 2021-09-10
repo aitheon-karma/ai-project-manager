@@ -1,0 +1,187 @@
+<form class="project-form__new"
+      novalidate
+      *ngIf="projectForm"
+      [formGroup]="projectForm"
+      (ngSubmit)="onSubmit()">
+  <div class="project-form__name input-wrap input-wrap--ghost input-wrap--new-ghost mb--16"
+       [class.project-form__error]="projectForm.get('name').invalid && submitted"
+       [class.ghostFocus]="ghostFocus">
+    <input class="input-wrap__input infrastructure-form__name-input pr-5"
+           (focus)="ghostFocus=true"
+           (blur)="ghostFocus=false"
+           type="text"
+           placeholder="Project name"
+           formControlName="name"
+           (input)="varifyTaskNameValue($event)"
+           maxlength="30"
+           #projectNameInput>
+    <span class="input-wrap__icon icon icon--edit" (click)="focusInput($event, projectNameInput)"></span>
+    <span class="input-wrap__counter"
+          *ngIf="ghostFocus">
+      {{ projectForm.get('name').value ? projectForm.get('name').value.length : 0 }} / 30
+    </span>
+    <label *ngIf="projectForm.get('name').hasError('required') && submitted"
+           class="text-danger project-form__name--error">
+      Project name is required
+    </label>
+    <label *ngIf="((textValidation || projectForm.get('name').hasError('pattern')) && submitted && !projectForm.get('name').hasError('required')) "
+           class="text-danger project-form__name--error">
+      Invalid project name
+    </label>
+    <label *ngIf="submitted && projectForm.get('name').hasError('maxlength')"
+           class="text-danger project-form__name--error">
+      Project name cannot be more than 30 characters long
+    </label>
+  </div>
+  <div class="project-form__section">
+    <label class="project-form__label mt--0"
+           [hidden]=" projectForm.get('key').invalid && submitted">
+      Project Key
+    </label>
+    <label *ngIf="projectForm.get('key').hasError('required') && submitted"
+           class="project-form__label mt--0 text-danger">
+      Project Key is required
+    </label>
+    <label *ngIf="projectForm.get('key').hasError('pattern') && submitted"
+           class="project-form__label mt--0 text-danger">
+      Project Key should contain only characters
+    </label>
+    <div class="project-form__key-wrapper">
+      <div class="input-wrap input-wrap--contained input-wrap--small"
+           [class.project-form__error]="projectForm.get('key').hasError('required') && submitted">
+        <input type="text"
+               class="input-wrap__input"
+               autocomplete="off"
+               formControlName="key"
+               required
+               maxlength="3"
+               style="text-transform: uppercase" />
+      </div>
+      <span class="icon icon--question-help icon--size-24px pointer ml--8 parent-tt">
+        <span class="tooltips tooltips--right">Project key – uses for task ID</span>
+      </span>
+    </div>
+  </div>
+  <div class="project-form__section mb--16">
+    <label class="project-form__label mt--0"
+           [hidden]="projectForm.get('description').invalid && submitted">
+      Description
+    </label>
+    <label *ngIf="(projectForm.get('description').hasError('required')) &&
+                  (projectForm.get('description').dirty || projectForm.get('description').touched || submitted )"
+           class="project-form__label mt--0 text-danger">
+      Description is required
+    </label>
+    <div class="textarea-wrap textarea-wrap--contained textarea-wrap--max-size"
+         [class.project-form__error]="(projectForm.get('description').hasError('required')) &&
+                                        (projectForm.get('description').dirty ||
+                                        projectForm.get('description').touched ||
+                                        submitted )">
+      <textarea class="textarea-wrap__textarea"
+                placeholder="Write your project description here"
+                formControlName="description"
+                maxlength="200"
+      ></textarea>
+      <span class="textarea-wrap__counter">
+        {{ projectForm.get('description').value ? projectForm.get('description').value?.length : 0 }}/200
+      </span>
+    </div>
+  </div>
+
+  <!--          Priority field is temporarily removed; to be restored -->
+
+<!--  <div class="mb&#45;&#45;16">-->
+<!--    <label class="project-form__label mt&#45;&#45;0">-->
+<!--      Priority-->
+<!--    </label>-->
+<!--    <ng-select class="dropdown dropdown&#45;&#45;contained"-->
+<!--               [items]="priorityList"-->
+<!--               [searchable]="false"-->
+<!--               [clearable]="false"-->
+<!--               formControlName="priority"-->
+<!--               bindLabel="title"-->
+<!--               bindValue="priority">-->
+<!--      <ng-template ng-label-tmp let-item="item">-->
+<!--        <div class="ng-value">-->
+<!--          <span class="ng-value-label">-->
+<!--            <div class="item item&#45;&#45;icon-24">-->
+<!--              <span></span><span class="fix-gap">{{item.title}}</span>-->
+<!--            </div>-->
+<!--          </span>-->
+<!--        </div>-->
+<!--      </ng-template>-->
+<!--    </ng-select>-->
+<!--  </div>-->
+  <label class="project-form__subtitle">
+    Project Access
+  </label>
+  <div class="mb--24">
+    <h5 class='project-form__mainTitle__sub project-form__mainTitle__sub--gray'>
+      Set up project access settings
+    </h5>
+    <ng-select class="dropdown dropdown--contained"
+               [items]="AccessList"
+               [searchable]="false"
+               [clearable]="false"
+               formControlName="type"
+               bindLabel="title"
+               bindValue="title">
+      <ng-template ng-label-tmp let-item="item">
+        <div class="ng-value">
+          <span class="ng-value-label">
+            <div class="item item--icon-24">
+              <span class='{{item!.icon}} icon icon--size-24px mr--16'></span>
+              <span>{{item!.title | titlecase}}</span>
+            </div>
+          </span>
+        </div>
+      </ng-template>
+      <ng-template ng-option-tmp let-item="item" let-index="index">
+        <div class="item item--icon-24">
+          <span class="{{item!.icon}} icon icon--size-24px"></span>
+          <div class="item-text">
+            <span class="title">{{item!.title |titlecase}}</span><br>
+            <span class="description">{{item!.description}}</span>
+          </div>
+        </div>
+      </ng-template>
+    </ng-select>
+    <small *ngIf="((projectForm.get('type').hasError('required')) && submitted )"
+           class="text-danger">
+      Configure access to the project is required
+    </small>
+    <label class='project-form__mainTitle__sub mt--8 mb--0'>
+      Anyone with access to Aitheon can create and edit issues
+    </label>
+  </div>
+  <label class="project-form__subtitle">
+    Issue Board
+  </label>
+  <div class="mx-0 mb--24">
+    <h5 class="project-form__mainTitle__sub project-form__mainTitle__sub--gray mb--16 d-inline-block">
+      Creates a board for issue reports
+    </h5>
+    <div class="d-flex align-items-center pl-1">
+      <label class="switch"
+             (click)="issueBordLabel = projectForm.get('issueBoardEnabled').value !== false ? 'Disabled' : 'Enabled'">
+        <input class="switch__input"
+               id="issueBoardEnabled"
+               name="issueBoardEnabled"
+               type="checkbox"
+               formControlName="issueBoardEnabled">
+        <span class="switch__toggle"></span>
+      </label>
+      <label class="issue-board-label">{{ issueBordLabel }}</label>
+    </div>
+  </div>
+  <hr class="project-form__hr">
+
+  <div class="d-flex justify-content-end">
+    <button type="button" class="button button--ghost button--medium mr--16" (click)="cancel()">Cancel</button>
+    <button class="button button--contained button--medium" *ngIf="!loading;else loadingView" type="submit">{{isNew?'Create':'Update'}}</button>
+  </div>
+</form>
+
+<ng-template #loadingView>
+  <ai-loading class="left-align p-0 sm d-block mt-1"></ai-loading>
+</ng-template>

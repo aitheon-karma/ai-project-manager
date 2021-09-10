@@ -1,0 +1,153 @@
+<div class="epic-dashboard-top">
+    <div class="container">
+        <div class="menu">
+            <ul class="nav">
+                <li class="nav-item" *ngIf="epic && epic.status == 'ACTIVE'">
+                    <a class="nav-link"
+                       routerLinkActive="active"
+                       routerLink="/dashboard"
+                       [queryParams]="{tab: 'epics'}"
+                       [routerLinkActiveOptions]="{exact: true}">
+                        All Epics
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="epic && epic.status == 'ARCHIVED'">
+                    <a class="nav-link"
+                       routerLinkActive="active"
+                       routerLink="/dashboard"
+                       [queryParams]="{tab: 'archived_epics'}"
+                       [routerLinkActiveOptions]="{exact: true}">
+                        All Archived Epics
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="container epic-dashboard mt--48">
+    <div #filters>
+        <ai-filters-panel [projectData]="projectData"
+                          [projectStatus]="epic?.status"
+                          (filterData)="getEpic($event)"
+                          [epic]="epic"
+                          (removeEpic)="removeEpicFromFilters($event)"
+                          (toggleFiltersEvent)="calcFilterHeight()"
+                          (epicForModal)="openEpicForm($event)">
+        </ai-filters-panel>
+    </div>
+    <div *ngIf="loading; else epicBoard" class="loading-container">
+        <ai-loading></ai-loading>
+    </div>
+    <!-- Board -->
+    <ng-template #epicBoard>
+        <div class="row">
+            <div class="col mt--24">
+                <div *ngIf="!loading && epic">
+                    <div class="epic-dashboard__stage-scroll">
+                        <div cdkDropListOrientation="horizontal"
+                             class="epic-dashboard__cdk-drop-list"
+                             cdkDropList
+                             [cdkDropListData]="board">
+                            <div cdkDropListGroup
+                                 cdkDrag
+                                 cdkDragDisabled
+                                 [cdkDragData]="boardStage"
+                                 class="epic-dashboard__stage-container"
+                                 *ngFor="let boardStage of board; let i = index"
+                                 [style.height]="stageContainerHeight">
+                                <div style="background-color: #2b2b2b;">
+                                    <div class="epic-dashboard__stage-container-head">
+                                        <span class="epic-dashboard__stage-container-head-title">
+                                          {{boardStage?.label}} - {{boardStage?.tasks?.length}} Tasks
+                                        </span>
+                                    </div>
+
+                                    <!-- Tasks List -->
+                                    <div class="epic-dashboard__stage-tasks-list"
+                                         [style.height]="stageTasksHeight">
+                                        <div cdkDropList
+                                             id={{i}}
+                                             *ngIf="!draggingTask || boardStage.stage === currentStage"
+                                             class="epic-dashboard__stage-tasks-drop-list"
+                                             [class.epic-dashboard__stage-tasks-drop-list--small]="currentStage === boardStage.stage"
+                                             [cdkDropListConnectedTo]="stagesIds"
+                                             (cdkDropListDropped)="moveTaskInEpic($event, boardStage.tasks)"
+                                             [cdkDropListData]="boardStage.tasks">
+                                            <div *ngFor="let task of boardStage.tasks"
+                                                 cdkDrag
+                                                 (cdkDragStarted)="onStartDragging(task, boardStage)"
+                                                 [cdkDragData]="task"
+                                                 [cdkDragDisabled]="epic.status === 'ARCHIVED'"
+                                                 draggable="true"
+                                                 (dragstart)="epic.status === 'ARCHIVED' ? onDragArchivedEpic() : ''">
+                                                <div class="epic-dashboard__stage-task"
+                                                     [class.epic-dashboard__stage-task--fixed-width]="draggingTask?._id === task._id">
+                                                    <ai-tasks-card [task]="task"
+                                                                   [stage]="taskStages && taskStages[task.stage]"
+                                                                   [project]="task.project"
+                                                                   (openModal)="openTaskModal($event)">
+                                                    </ai-tasks-card>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="epic-dashboard__drag-zone-list"
+                                             [class.epic-dashboard__drag-zone-list--vertical]="boardStage.stage === currentStage"
+                                             *ngIf="draggingTask">
+                                            <ng-container>
+                                                <div cdkDropList
+                                                     class="epic-dashboard__drag-zone"
+                                                     [class.epic-dashboard__drag-zone--disabled]="draggingTask?.stage === taskStage.stageId"
+                                                     [id]="taskStage.stageId"
+                                                     (cdkDropListDropped)="moveTaskBetweenStages($event, taskStage)"
+                                                     *ngFor="let taskStage of taskBoard && taskBoard[boardStage.stage] ?.stages"
+                                                     [cdkDropListData]="taskStage">
+                                                    <span>{{ taskStage?.name }}</span>
+                                                </div>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                    <!-- Tasks List End -->
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <!-- Board End-->
+</div>
+
+<ai-task-modal [stages]="allStages"></ai-task-modal>
+
+<ai-generic-confirm #genericConfirm></ai-generic-confirm>
+
+<ng-template #epicModal>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Update epic</h4>
+        <button type="button"
+                class="icon icon--close icon--dynamic"
+                aria-label="Close"
+                (click)="closeEpicModal()"></button>
+    </div>
+    <div class="modal-body">
+        <ai-epic-form #epicForm
+                      (closeModal)="closeEpicModal()"
+                      [epic]="epic"></ai-epic-form>
+    </div>
+    <div class="modal-footer justify-content-between">
+        <button class="button button--ghost button--error button--medium"
+                (click)="deleteEpic({epic: epic, status: epic.status  === 'ACTIVE'? 'ARCHIVED': 'DELETED' })">
+            {{ epic.status === 'ACTIVE' ? 'Archive' : 'Delete' }}
+        </button>
+        <button class="button button--ghost mr--8 button--medium ml-auto"
+                (click)="closeEpicModal()">
+            Cancel
+        </button>
+        <button class="button button--contained button--medium"
+                (click)="updateEpic(epicForm)">
+            Update
+        </button>
+    </div>
+</ng-template>

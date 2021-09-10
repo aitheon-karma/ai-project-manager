@@ -1,0 +1,223 @@
+.epic-dashboard {
+    padding-top: 24px;
+
+    &__loader-wrap {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: calc(100vh / 2 - 96px);
+    }
+
+    &__stage-scroll {
+        overflow: auto;
+
+        &::-webkit-scrollbar {
+            background-color: transparent;
+            height: 4px;
+            overflow-x: scroll;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: #454545;
+            border-radius: 4px;
+        }
+
+        .example-container:last-child {
+            margin-right: 0;
+        }
+
+        .example-container:last-child {
+            margin-right: 0;
+        }
+    }
+
+    &__cdk-drop-list {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+
+    &__stage-container {
+        max-width: 284.5px;
+        display: inline-block;
+        vertical-align: top;
+        background-color: #2b2b2b;
+        position: relative;
+        padding: 12px 8px;
+        margin: 0 8px;
+        border-radius: 2px 2px 0 0;
+        user-select: none;
+
+        &:first-child {
+            margin-left: 0;
+        }
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+
+    &__stage-container-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        padding: 0 6px;
+    }
+
+    &__stage-container-head-title {
+        color: #7e7e7e;
+        font-size: 10px;
+        line-height: 20px;
+        text-transform: uppercase;
+    }
+
+    &__stage-tasks-list {
+        border: solid 1px #2b2b2b;
+        background: #2b2b2b;
+        border-radius: 4px;
+        overflow: hidden;
+        display: flex;
+        overflow-y: auto;
+
+        &::-webkit-scrollbar {
+            background-color: #2b2b2b !important;
+            width: 2px !important;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: #454545 !important;
+            border-radius: 2px !important;
+        }
+    }
+
+    &__stage-task {
+        background: rgb(56, 56, 56);
+        border-radius: 2px;
+        overflow: hidden;
+        margin-bottom: 8px;
+        transition: all linear 0.2s;
+
+        &--fixed-width {
+            min-width: 259px;
+        }
+
+        &:hover {
+            box-shadow: 0 2px 6px 0 rgba(31, 31, 31, 1);
+            cursor: pointer;
+        }
+    }
+
+    &__stage-tasks-drop-list {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        width: 258.5px;
+        max-width: 258.5px;
+
+        &--small {
+            width: unset;
+            min-width: 200px;
+            max-width: 200px;
+            overflow-x: hidden;
+        }
+    }
+
+    &__drag-zone-list {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+
+        &--vertical {
+            margin-left: 8px;
+
+            .epic-dashboard__drag-zone {
+                width: 50px;
+                max-width: 50px;
+
+                span {
+                    transform: rotate(-90deg);
+                    white-space: nowrap;
+                }
+            }
+        }
+    }
+
+    &__drag-zone {
+        background: rgba(103, 178, 49, 0.1);
+        position: relative;
+        border: 1px dashed #67b231;
+        //border-radius: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 110px;
+        flex: 1;
+        transition: all .2s;
+        margin-bottom: 8px;
+        font-size: 14px;
+        font-weight: normal;
+        letter-spacing: 0.2px;
+
+        span {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        //&:not(.epic-dashboard__drag-zone--disabled):hover {
+        //    background: rgba(103, 178, 49, 0.4);
+        //}
+
+        &:not(.epic-dashboard__drag-zone--disabled):hover {
+            background: rgba(103, 178, 49, 0.2);
+        }
+
+        &--disabled {
+            opacity: .3;
+        }
+    }
+
+    .cdk-drag-placeholder {
+        opacity: 0;
+    }
+}
+
+.epic-dashboard-top {
+    background-color: #2b2b2b;
+    position: fixed;
+    z-index: 10;
+    width: 100%;
+    margin-bottom: 20px;
+    left: 0;
+
+    .menu {
+        padding: 0;
+        border: 0;
+        box-shadow: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .nav {
+        border-radius: 0;
+        height: 48px !important;
+        background: #2b2b2b;
+        align-items: center;
+    }
+
+    .nav-link {
+        border-radius: 0;
+        padding: 4px 0;
+        cursor: pointer;
+        color: #7e7e7e;
+        -webkit-transition: .3s linear;
+        transition: all linear .3s;
+        margin: auto 0;
+        font-size: 14px;
+        margin-right: 32px !important;
+        background: transparent;
+    }
+}

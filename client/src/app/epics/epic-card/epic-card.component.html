@@ -1,0 +1,65 @@
+<a href="/epics/{{epic._id}}" class="epic"
+     (click)="goToEpic($event)">
+  <span class="icon icon--dynamic icon--more epic__more-button"
+        (click)="openMore(epic, $event)" [class.icon--active-open]="epic?.moreBtnOpen"></span>
+    <div class="epic__more-list"
+         *ngIf="epic?.moreBtnOpen">
+      <span class="epic__more-item"
+            (click)="openEpicForm(epic, $event)">
+        Edit Epic
+      </span>
+      <hr class="epic__more-hr">
+      <span class="epic__more-item"
+            *ngIf="epic.status == 'ACTIVE'"
+            (click)="changeEpicStatus(epic, 'ARCHIVED', $event)">
+        Move to Archive
+      </span>
+      <span class="epic__more-item"
+            *ngIf="epic.status == 'ARCHIVED'"
+            (click)="changeEpicStatus(epic, 'ACTIVE', $event)">
+        Unarchive Epic
+      </span>
+      <span class="epic__more-item"
+            *ngIf="epic.status == 'ARCHIVED'"
+            (click)="changeEpicStatus(epic, 'DELETED', $event)">
+        Delete Epic
+      </span>
+    </div>
+    <div class="epic__tasks-counter">
+        <span class="icon icon--task mr-1"></span>
+        {{ totalTasks }}
+    </div>
+    <div class="epic__reference-section">
+      <span class="epic__reference-icon"></span>
+      <span class="epic__reference">{{ epic.reference }}</span>
+    </div>
+    <div class="epic__name">
+      {{ epic.name }}
+    </div>
+    <div class="epic__section" *ngIf="epic.endDate">
+      <span class="epic__label">Completion estimate:</span>
+      <span class="epic__data">
+        <span class="epic__danger-icon"
+              *ngIf="alertDate"
+              tooltip="Epic will finish soon">
+        </span>
+        {{ epic.endDate | date }}
+      </span>
+      <!--
+      <span class="epic__data"
+            *ngIf="!epic.endDate">
+        -
+      </span>
+      -->
+  </div>
+  <div  class="epic__progress-section mt-auto">
+    <div class="epic__progress">
+      <div *ngIf="totalTasks !== 0"
+            class="epic__progress-background"
+            style.width="{{percentage}}%"
+            style.background="{{backgroundProgress}}"></div>
+    </div>
+    <div  class="epic__progress-percentage"
+          *ngIf="epic.tasks?.unDoneTasks || epic.tasks?.doneTasks">{{ percentage }}%</div>
+  </div>
+</a>

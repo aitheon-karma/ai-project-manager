@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="17px" viewBox="0 0 18 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon / 24-cont / social / star-filled-24</title>
+    <defs>
+        <path d="M15.0369081,8.1646781 L20.2011685,8.80474504 C20.961276,8.89303014 21.2742615,9.84209492 20.7153589,10.3718055 L16.9371771,13.881138 L17.8984896,18.9133885 C18.0549823,19.6638118 17.2278064,20.2597362 16.5571233,19.8845246 L11.9964778,17.4125419 L7.45818836,19.8845246 C6.76514909,20.2597362 5.96032929,19.6638118 6.09446592,18.9133885 L7.07813456,13.881138 L3.29995275,10.3718055 C2.718694,9.84209492 3.03167948,8.89303014 3.81414317,8.80474504 L8.95604742,8.1646781 L11.1693019,3.52971057 C11.5046434,2.82342981 12.5106682,2.82342981 12.8460098,3.52971057 L15.0369081,8.1646781 Z" id="path-1"></path>
+    </defs>
+    <g id="Support-Dashboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon-/-24-cont-/-social-/-star-filled-24" transform="translate(-3.000000, -3.000000)">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <use id="Mask" fill="#dcbc65" fill-rule="nonzero" xlink:href="#path-1"></use>
+            <g id="Colors-/-Dark-Theme-/-Grayscale-/-Filled-/-$base-gray" mask="url(#mask-2)" fill="#dcbc65" fill-rule="evenodd">
+                <rect id="Dark-Theme-/-Grayscale-/-Filled-/-$base-gray" x="0" y="0" width="24" height="24"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

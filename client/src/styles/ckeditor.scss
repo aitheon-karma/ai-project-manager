@@ -1,0 +1,659 @@
+$base-gray: #7e7e7e;
+
+.editor {
+
+    .ck {
+        .ck-reset_all * {
+            color: #fff !important;
+        }
+
+        .ck-toolbar {
+            background: #1f1f1f !important;
+            border: 1px solid #1f1f1f !important;
+
+            & > button.ck.ck-button {
+                transform: scale(0.5);
+            }
+
+            &__separator {
+                margin: 0 1.5px !important;
+                height: 16px !important;
+                align-self: center !important;
+                background: $base-gray !important;
+            }
+
+            &__grouped-dropdown {
+                & > .ck-dropdown__button {
+                    width: 30px !important;
+                    height: 30px !important;
+                    border-radius: 50% !important;
+                }
+
+                .ck-toolbar {
+                    border-radius: 2px !important;
+                    background: #2b2b2b !important;
+
+                    .ck-toolbar__items {
+                        .ck-dropdown__panel {
+                            left: unset !important;
+                            right: 0 !important;
+                        }
+                    }
+                }
+            }
+        }
+
+        .ck-alignment-dropdown {
+            button.ck.ck-button {
+                border-radius: unset !important;
+                margin: 0 !important;
+            }
+        }
+
+        .ck-heading-dropdown button[aria-haspopup="true"] {
+            .ck-button__label {
+                font-size: 11px !important;
+                line-height: 14px !important;
+            }
+        }
+
+        .ck-button {
+            border-radius: 2px !important;
+            margin-right: 2px !important;
+            margin-left: 2px !important;
+            outline: none !important;
+            transition: .2s ease-in-out !important;
+
+            &:not(.ck-dropdown__button) {
+                border-radius: 50% !important;
+            }
+
+            &.ck-dropdown__button:last-child {
+                border-radius: 50% !important;
+            }
+
+            &:active {
+                border: 1px solid transparent !important;
+                box-shadow: none !important;
+            }
+
+
+            &:not(.ck-color-grid__tile):hover {
+                background: rgba(126, 126, 126, 0.15) !important;
+            }
+
+            &:not(.ck-color-grid__tile).ck-on {
+                background: rgba(#dcbc65, 0.2) !important;
+            }
+        }
+
+        .ck-icon {
+            &:not([fill]) path,
+            circle {
+                fill: $base-gray !important;
+            }
+        }
+
+        .ck-editor {
+            &__editable:not(.ck-editor__nested-editable) {
+                padding: 8px 14px !important;
+            }
+
+            &__editable {
+                background: #1F1F1F !important;
+                max-height: 400px;
+
+                &::-webkit-scrollbar {
+                    background-color: #2b2b2b !important;
+                    width: 2px !important;
+                }
+
+                &::-webkit-scrollbar-thumb {
+                    background-color: #454545 !important;
+                    border-radius: 2px !important;
+                }
+
+                p,
+                i {
+                    font-size: 14px !important;
+                }
+
+                i {
+                    font-style: italic !important;
+                }
+
+
+                input[type="checkbox"] {
+                    border-radius: 2px !important;
+
+                    &[checked] {
+                        &:before {
+                            background: #dcbc65 !important;
+                            border-color: #dcbc65 !important;
+                        }
+
+                        &:after {
+                            width: 3px !important;
+                            height: 7px !important;
+                            left: 6px !important;
+                            border-bottom: 1px solid #1f1f1f !important;
+                            border-right: 1px solid #1f1f1f !important;
+                        }
+                    }
+                }
+            }
+
+            &__editable_inline {
+                & p {
+                    text-decoration-line: none !important;
+
+                    &:first-child {
+                        font-weight: 400 !important;
+                    }
+                }
+            }
+        }
+
+        .ck-list {
+            background: #2b2b2b !important;
+
+            &__item {
+                min-width: 150px !important;
+            }
+        }
+
+        .ck-dropdown {
+            &__panel {
+                background: #2b2b2b !important;
+                border: none !important;
+                border-radius: 5px !important;
+
+                button.ck-button_with-text {
+                    border-radius: 2px !important;
+                    margin: 0 !important;
+                }
+
+
+                .ck-color-table {
+                    &__remove-color {
+                        border-bottom: 1px solid #454545 !important;
+
+                        .ck-button__label {
+                            display: block;
+                            color: $base-gray !important;
+                            margin-left: 20px !important;
+                        }
+                    }
+
+                    .ck-color-grid {
+                        &__tile {
+                            margin: 0 !important;
+                            border: 2px solid transparent !important;
+
+                            &:hover,
+                            &.ck-on {
+                                box-shadow: none !important;
+                                border: 2px solid #dcbc65 !important;
+                            }
+                        }
+
+                        &__label {
+                            text-align: center !important;
+                            color: $base-gray !important;
+                        }
+                    }
+                }
+            }
+        }
+
+        .ck-button:not(.ck-button_with-text) {
+            .ck-button__icon {
+                transform: scale(0.8) !important;
+            }
+        }
+
+        .ck-balloon-panel {
+            z-index: 3700 !important;
+        }
+
+        .ck-insert-table-dropdown {
+            &__grid {
+                .ck-insert-table-dropdown-grid-box {
+                    border-color: $base-gray !important;
+
+                    &.ck-on {
+                        border-color: #dcbc65 !important;
+                        background: rgba(#dcbc65, 0.2) !important;
+                    }
+                }
+            }
+
+            &__label {
+                color: $base-gray !important;
+            }
+        }
+    }
+
+    .ck-widget {
+        outline-width: 1px !important;
+
+        &_selected:not(.image),
+        &:hover:not(.image) {
+            outline: 1px solid #dcbc65 !important;
+        }
+
+        &.image {
+            outline-color: #454545 !important;
+            outline-width: 0.5px !important;
+
+            &_selected,
+            &:hover {
+                outline: 0.5px solid #454545 !important;
+            }
+        }
+
+        &__resizer {
+            outline: 0.5px solid #DCBC65 !important;
+
+            &__handle {
+                height: 8px !important;
+                width: 8px !important;
+                border-radius: 2px !important;
+                background: #DCBC65 !important;
+                border: 1px solid transparent !important;
+            }
+        }
+    }
+
+    .table {
+        color: #fff !important;
+
+        table {
+            border: 1px double #7e7e7e !important;
+
+            th, td {
+                border: 0.5px solid #7e7e7e !important;
+                font-weight: normal !important;
+            }
+        }
+
+        .ck-editor__nested-editable {
+            &_focused {
+                outline: 1px solid #dcbc65 !important;
+            }
+        }
+
+        .ck-editor__editable_selected:after {
+            background-color: #2b2b2b !important;
+        }
+    }
+
+    blockquote {
+        border-left: 4px solid #dcbc65 !important;
+    }
+
+    .ck-widget__selection-handle {
+        background: #dcbc65 !important;
+    }
+}
+
+div.ck-body-wrapper {
+    .ck-body {
+        .ck-input-text {
+            color: #dcbc65 !important;
+            background: #1f1f1f !important;
+            border: 1px solid transparent !important;
+            border-radius: 2px !important;
+
+            &::-moz-selection,
+            &::selection {
+                background: #dcbc65 !important;
+            }
+
+            &:hover {
+                border: 1px solid #454545 !important;
+            }
+
+            &:focus {
+                border: 1px solid #dcbc65 !important;
+                box-shadow: none !important;
+            }
+        }
+
+        .ck.ck-balloon-panel[class*=arrow_n] {
+            &:before,
+            &:after {
+                border-bottom-color: #2b2b2b !important;
+            }
+        }
+
+        .ck-balloon-panel_with-arrow {
+            &:before,
+            &:after {
+                border-top-color: #2b2b2b !important;
+            }
+        }
+
+        .ck-balloon-panel {
+            background: #2b2b2b !important;
+            border: none !important;
+            z-index: 3752 !important;
+        }
+
+        button {
+            border-radius: 50% !important;
+            outline: none !important;
+            transition: .2s ease-in-out !important;
+
+            &:active {
+                border: 1px solid transparent !important;
+                box-shadow: none !important;
+            }
+
+            path {
+                transition: .2s ease-in-out !important;
+                fill: $base-gray !important;
+            }
+
+            &:hover {
+                background: rgba(126, 126, 126, 0.15) !important;
+            }
+        }
+
+        .ck-link-actions__preview {
+            border: 1px solid transparent !important;
+            box-shadow: none !important;
+
+            .ck-button__label {
+                color: #dcbc65 !important;
+            }
+
+            &:active {
+                border: 1px solid transparent !important;
+                box-shadow: none !important;
+            }
+        }
+
+        .ck-toolbar[aria-label="Table toolbar"] {
+            border-radius: 2px !important;
+            background: #2b2b2b !important;
+
+            .ck-switchbutton {
+                span.ck-button__toggle {
+                    background: #454545 !important;
+                    border-radius: 10px !important;
+                }
+
+                span.ck-button__toggle__inner {
+                    background: $base-gray !important;
+                    border-radius: 50% !important;
+                }
+
+                &.ck-on {
+                    span.ck-button__toggle {
+                        background: #dcbc65 !important;
+                    }
+
+                    span.ck-button__toggle__inner {
+                        background: #fff !important;
+                    }
+                }
+            }
+
+            .ck-list__separator {
+                background: $base-gray !important;
+            }
+
+            .ck-list {
+                background: #2b2b2b !important;
+            }
+
+            .ck-dropdown__panel {
+                border: none !important;
+                border-radius: 5px !important;
+
+                button.ck-button_with-text {
+                    border-radius: 2px !important;
+                    margin: 0 !important;
+                    color: #fff !important;
+
+                    &:hover {
+                        background: rgba(126, 126, 126, 0.15) !important;
+                    }
+                }
+            }
+
+            button.ck-button {
+                background: #2b2b2b !important;
+                border-radius: 2px !important;
+                transition: .2s ease-in-out !important;
+
+                &.ck-splitbutton__arrow {
+                    border-left-color: transparent !important;
+                }
+
+                &:hover {
+                    background: rgba(#dcbc65, 0.2) !important;
+
+                    &.ck-splitbutton__arrow {
+                        border-left-color: transparent !important;
+                    }
+                }
+            }
+        }
+
+        .ck-table-cell-properties-form,
+        .ck-table-properties-form {
+            .ck-form__header {
+                border-bottom: 1px solid #454545 !important;
+            }
+
+            .ck-button__label,
+            .ck-form__header__label,
+            .ck-label {
+                font-size: 12px !important;
+                color: $base-gray !important;
+                font-weight: normal !important;
+            }
+
+            .ck-dropdown__button {
+                border: none !important;
+                border-radius: 2px !important;
+                outline: none !important;
+                box-shadow: none !important;
+
+                &.ck-on,
+                &:hover {
+                    box-shadow: none !important;
+                    outline: none !important;
+                    background: rgba(126, 126, 126, 0.15) !important;
+                }
+            }
+
+            .ck-dropdown__panel {
+                background: #2b2b2b !important;
+                border: none !important;
+            }
+
+            .ck-input-color__button.ck-disabled {
+                background: transparent !important;
+                opacity: .5 !important;
+
+                &:hover {
+                    background: transparent !important;
+                }
+            }
+
+            .ck-input-color__button__preview {
+                border: 1px solid $base-gray !important;
+
+                .ck-input-color__button__preview__no-color-indicator {
+                    background: #dcbc65 !important;
+                }
+            }
+
+            .ck-input-text {
+                color: #fff !important;
+            }
+
+            .ck-disabled {
+                input.ck-input-text {
+                    border: 1px solid transparent !important;
+                    background: #242424 !important;
+
+                    &:hover {
+                        border: 1px solid transparent !important;
+                    }
+                }
+            }
+
+            .ck-table-form__dimension-operator {
+                color: $base-gray !important;
+            }
+
+            .ck-toolbar_compact {
+                border: 1px solid #454545 !important;
+            }
+
+            .ck-button {
+                border-radius: 2px !important;
+
+                &:hover,
+                &.ck-on {
+                    background: rgba(#dcbc65, 0.2) !important;
+                }
+            }
+        }
+
+        .ck-list {
+            background: #2b2b2b !important;
+
+            button {
+                border-radius: unset !important;
+
+                &:hover {
+                    background: rgba(126, 126, 126, 0.15) !important;
+                }
+                &.ck-on {
+                    background: rgba(#dcbc65, 0.2);
+                }
+            }
+
+            .ck-button__label {
+                color: #fff !important;
+            }
+        }
+
+        .ck-mentions {
+            max-height: 191px;
+            width: 340px;
+            margin-top: 16px;
+
+            .ck-mention-custom-item {
+                display: flex;
+                align-items: center;
+                padding: 8px 16px;
+                transition: .1s ease-in-out;
+                cursor: pointer;
+
+                &:hover {
+                    background: #383838;
+                    transition: .1s ease-in-out;
+                }
+            
+                &__logo {
+                    width: 32px;
+                    height: 32px;
+                    margin-right: 16px;
+                    border-radius: 50%;
+                    background: #454545;
+                    background-position: center center;
+                    background-size: contain;
+                    background-repeat: no-repeat;
+            
+                    &--empty {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 12px;
+                        line-height: 32px;
+                        color: #fff;
+                        letter-spacing: 0;
+                        text-transform: uppercase;
+                    }
+                }
+
+                &__name {
+                    margin-right: 16px;
+                    color: #fff;
+                    font-size: 14px;
+                    letter-spacing: 0.2px;
+                    line-height: 20px;
+                }
+
+                &__username {
+                    color: #7e7e7e;
+                    font-size: 14px;
+                    letter-spacing: 0.2px;
+                    line-height: 20px;
+                }
+            }
+        }
+    }
+}
+
+.description-editor {
+    .ck-editor__editable:not(figcaption) {
+        min-height: 125px !important;
+    }
+}
+
+.comment-editor {
+    .ck-editor__editable:not(figcaption) {
+        max-height: 300px !important;
+    }
+
+    .ck-content {
+        
+        p {
+            width: 95%;
+        }
+    }
+}
+
+.mention {
+    background: transparent !important;
+    color: #dcbc65 !important;
+}
+
+.ck-content .image > figcaption {
+    color: #eee !important;
+    font-size: 12px !important;
+    padding: 8px !important;
+}
+
+.ck.ck-toolbar {
+    background: #2b2b2b !important;
+
+    .ck-button {
+        &:not(.ck-color-grid__tile):hover {
+            background: rgba(126, 126, 126, 0.15) !important;
+        }
+
+        &:not(.ck-color-grid__tile).ck-on {
+            background: rgba(#dcbc65, 0.2) !important;
+        }
+    }
+}
+
+figcaption.ck-editor__nested-editable_focused {
+    border: 1px solid #DCBC65 !important;
+}
+
+.ck-file-dialog-button {
+    margin-right: 0 !important;
+}
+
+.ck.ck-list__item .ck-button.ck-on:not(.ck-disabled) {
+    background: rgba(#dcbc65, 0.2) !important;
+}

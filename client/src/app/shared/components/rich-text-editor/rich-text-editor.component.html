@@ -1,0 +1,22 @@
+<div class="editor"
+     #editorView
+     [ngClass]="[customClass]"
+     [class.editor--error]="error"
+     [class.editor--focused]="focused">
+    <ckeditor [editor]="editor"
+              id="task-description"
+              [disabled]="disable"
+              [config]="config"
+              (focus)="onFocus()"
+              (blur)="onBlur()"
+              [(ngModel)]="value"
+              (ngModelChange)="updateChanges()"
+              (ready)="onEditorReady($event)">
+    </ckeditor>
+    <ai-drive-uploader #driveUploader
+                       (success)="onSuccessUpload($event)"
+                       [oganizationId]="organizationId"
+                       [service]="currentServiceKey"
+                       [serviceFolder]="serviceFolder">
+    </ai-drive-uploader>
+</div>

@@ -1,0 +1,45 @@
+<div class="row justify-content-start mx-0">
+  <div class="col-9">
+    <h2 class="settings-title mb--4">
+      Access
+    </h2>
+    <div class="settings-info">
+      Configure access to the project
+    </div>
+    <hr class="settings-line mt--24 mb--24">
+
+    <form [formGroup]="projectAccessForm" *ngIf="!loadingProject; else loader" (ngSubmit)="updateProjectAccess()">
+      <div class="row mx-0 access__radioTab" [class.border]="access.value== projectAccessForm.value.access"
+        *ngFor="let access of accessList" (click)="projectAccessForm.get('access').setValue(access.value); onValueChange();">
+        <div class="col-1 mr--16 p-0">
+          <span class="icon icon--size-24px">
+            <i class="{{access.icon}}"></i>
+          </span>
+        </div>
+        <div class="col-10 radioDescription mr-auto p-0">
+          <div class="title">
+            {{access.title}}
+          </div>
+          <div class="description">
+            {{access.description}}
+          </div>
+        </div>
+        <div class="radio col p-0 d-flex justify-content-end align-items-start">
+          <input type="radio" formControlName="access" value="{{access.value}}">
+        </div>
+      </div>
+      <hr class="settings-line mt--24 mb--16">
+      <div class="d-flex justify-content-end">
+        <button type="submit" class="button button--medium button--contained" [disabled]="isButtonDisabled">
+          Save Changes
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<ng-template #loader>
+  <div class="text-center">
+    <ai-loading></ai-loading>
+  </div>
+</ng-template>

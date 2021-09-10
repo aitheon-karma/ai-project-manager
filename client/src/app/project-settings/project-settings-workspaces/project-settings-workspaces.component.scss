@@ -1,0 +1,72 @@
+.settings-title {
+  color: #fff;
+  font-size: 24px;
+  font-weight: normal;
+  letter-spacing: 0;
+  line-height: 32px;
+}
+
+.settings-info {
+  color: rgb(126, 126, 126);
+  font-size: 14px;
+  letter-spacing: 0.2px;
+  line-height: 20px;
+}
+
+.settings-line {
+  background: rgb(69, 69, 69);
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+  height: 1px;
+  width: 100%;
+}
+
+.workspace {
+
+  &__checkboxTab {
+    cursor: pointer;
+    padding: 16px;
+    border-radius: 2px;
+    border: 1px solid rgb(220, 188, 101);
+    margin-bottom: 8px;
+    background-size: cover;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    box-shadow: inset -32px 0 18px -6px #181818;
+
+    &:hover {
+      border: 1px solid #dcbc65;
+    }
+  }
+
+  &__checkbox {
+    margin-top: 5px;
+    padding-left: 23px;
+  }
+
+  &__title {
+    color: #fff;
+    font-size: 14px;
+    height: 20px;
+    letter-spacing: 0.2px;
+    line-height: 20px;
+  }
+
+  &__description {
+    color: rgb(126, 126, 126);
+    font-size: 12px;
+    letter-spacing: 0.3px;
+    line-height: 20px;
+    width: 487px;
+  }
+}
+
+.border {
+  border: 1px solid #181818 !important;
+}
+
+.border {
+  background: linear-gradient(-90deg, rgba(26, 26, 26, 0.6) 0%, rgb(43, 43, 43) 100%);
+  border: 1px solid rgb(220, 188, 101);
+}

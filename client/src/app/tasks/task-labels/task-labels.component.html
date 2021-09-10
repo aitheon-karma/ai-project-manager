@@ -1,0 +1,66 @@
+<div class="labels mb--24">
+  <label class="form-label">
+    Labels (Optional)
+  </label>
+  <div class="labels__add">
+    <button class="icon icon--plus icon--dynamic mr--8"
+            (click)="showSearchAndFocus($event)"
+            [disabled]="task.readOnly || taskReadonly"
+            [class.button--disabled]="task.readOnly || taskReadonly">
+    </button>
+    <!-- //Modifies for multiple labels -->
+    <div class="chip-label chip-label chip--selected parent-tt {{label.color}}-chip mr--8 mb--8"
+         *ngFor="let label of selectedLabels;index as i"
+         [class.item-disabled]="task.readOnly || taskReadonly">
+      <span class="chip__label" title="{{label.name}}">
+        {{label.name | titlecase}}
+      </span>
+      <button (click)="onLabelRemove(label, $event)"
+              class="icon icon--cancel-circle-f icon--white icon--size-16px"
+              [class.button--disabled]="task.readOnly || taskReadonly">
+      </button>
+    </div>
+
+    <div  (click)="stopEvents($event)"
+          class="assignee__add__list"
+          *ngIf="showSearch"
+          (clickOutside)="hideSearch()">
+      <div class="p--8">
+        <div class="search-container search-container--outlined">
+          <input  [formControl]="searchControl"
+                  type="search"
+                  placeholder="Search"
+                  class="search-container__input"
+                  #searchElement>
+          <div class="search-container__button icon icon--search icon--size-16px"></div>
+        </div>
+      </div>
+      <button style="width: 100%;"
+              class="custom-dropdown__new-pipe button button--ghost button--medium"
+              (click)="openCreateLabelModal()"
+              *ngIf="isAdmin">
+        <span class="custom-dropdown__new-pipe-icon button__icon icon icon--plus icon--size-16px"></span>
+        New Label
+      </button>
+      <div class="epic-label-scroll" (clickOutside)="getLabel = false">
+        <div class="assignee__add__list__item" *ngFor="let label of labels" (click)="setLabel(label)">
+          <div class="label-dot label-dot {{ label?.color }} mr--16"></div>
+          {{ label.name | titlecase }}
+        </div>
+        <div class="assignee__add__list__item no-items"
+             *ngIf="searchControl.value && labels.length==0">
+          No labels found
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<ng-template #createLabelForm class="modal-create-label" id="createLabelForm">
+  <ai-label-form  [projectLabelList]='labels'
+                  [labelToEdit]='labelToEdit'
+                  [labelFormModalRef]='labelFormModalRef'
+                  [projectId]='projectId'
+                  (create)='add($event)'> </ai-label-form>
+</ng-template>

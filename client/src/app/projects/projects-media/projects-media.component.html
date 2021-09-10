@@ -1,0 +1,145 @@
+<div  class="loading-container"
+      *ngIf="loading">
+  <ai-loading></ai-loading>
+</div>  
+<div class="container media mt--64" *ngIf="!loading">
+  <div class="media__top">
+    <h2 class="media__title">Projects media files</h2>
+    <div class="media__top-buttons">
+      <button class="button button--ghost button--small mr-2" (click)="openAddFileModal(addFileModal, 'link')">Add link</button>
+      <button class="button button--ghost button--small" (click)="openAddFileModal(addFileModal, 'file')">Add files</button>
+    </div>
+  </div>
+  <div class="media__section" *ngIf="files.length && images.length > 0">
+    <div class="media__section-top">
+      <h3 class="media__section-title">
+        Images
+      </h3>
+      <button class="icon icon--chevron-down icon--dynamic icon--size-16px"
+              *ngIf="!showMoreImages" tooltip="Show more"
+              (click)="toggleSection('images')" [hidden]="images.length < 8">
+      </button>
+      <button class="icon icon--chevron-up icon--dynamic icon--size-16px"
+              *ngIf="showMoreImages" tooltip="Show less"
+              (click)="toggleSection('images')" [hidden]="images.length < 8">
+      </button>
+    </div>
+    <div class="media__files-container media__files-container--images">
+      <div  class="media__image-item" *ngFor="let image of images" 
+            (click)="onPreviewFileOpen(image)">
+        <div class="media__image" placement='top' *ngIf="image.thumbnail"
+            [ngStyle]="{'background': 'url(data:image/png;base64,' + image.thumbnail +')'}"></div>
+        <span class="media__file-name" tooltip="{{ image.name }}" placement="bottom" [delay]="500">{{ image.name }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="media__section" *ngIf="files.length && videos.length > 0">
+    <div class="media__section-top">
+      <h3 class="media__section-title">
+        Videos
+      </h3>
+      <button class="icon icon--chevron-down icon--dynamic icon--size-16px"
+              *ngIf="!showMoreVideos" tooltip="Show more"
+              (click)="toggleSection('videos')" [hidden]="videos.length < 8">
+      </button>
+      <button class="icon icon--chevron-up icon--dynamic icon--size-16px"
+              *ngIf="showMoreVideos" tooltip="Show less"
+              (click)="toggleSection('videos')" [hidden]="videos.length < 8">
+      </button>
+    </div>
+    <div class="media__files-container media__files-container--videos">
+      <div  class="media__video-item" *ngFor="let video of videos"
+            (click)="onPreviewFileOpen(video)">
+        <video  class='media__video' src="{{ video.signedUrl }}"></video>
+        <span class="media__file-name" tooltip="{{ video.name }}" placement="bottom" [delay]="500">{{ video.name }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="media__section" *ngIf="files.length && otherFiles.length > 0">
+    <div class="media__section-top">
+      <h3 class="media__section-title">
+        Documents/files
+      </h3>
+      <button class="icon icon--chevron-down icon--dynamic icon--size-16px"
+              *ngIf="!showMoreFiles" tooltip="Show more"
+              (click)="toggleSection('files')" [hidden]="otherFiles.length < 8">
+      </button>
+      <button class="icon icon--chevron-up icon--dynamic icon--size-16px"
+              *ngIf="showMoreFiles" tooltip="Show less"
+              (click)="toggleSection('files')" [hidden]="otherFiles.length < 8">
+      </button>
+    </div>
+    <div class="media__files-container media__files-container--other">
+      <div  class="media__file-item" *ngFor="let file of otherFiles"
+            (click)="onPreviewFileOpen(file)">
+        <div class="media__file">
+          <a  download="{{ file.name }}" href="{{ file.name }}" tooltip="Download file" [delay]="600"
+              class="media__download-icon icon icon--download icon--size-16px icon--dynamic"></a>
+          <span class="media__file-icon icon icon--file icon--active"></span>
+          <span class="media__file-extension file-extension">{{ file.name.split('.').pop() }}</span>
+        </div>
+        <span class="media__file-name" tooltip="{{ file.name }}" placement="bottom" [delay]="500">{{ file.name }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #addFileModal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Add {{ isTypeLink ? 'files from links' : 'files' }}</h4>
+    <button type="button" class="icon icon--close pull-right" aria-label="Close" (click)="uploadedFiles?.length > 0 ? removeUploadedFiles() : close()">
+    </button>
+  </div>
+  <div class="modal-body p-0">
+    <div class="modal__container" *ngIf="isTypeLink">
+      <label *ngIf="!imageFromUrlError">You can download file from link (only images & .pdf files)</label>
+      <label class="text-danger" *ngIf="imageFromUrlError">You can only upload images/pdf files</label>
+      <div class="d-flex flex-nowrap align-items-center justify-content-between w-100">
+        <div  class="input-wrap input-wrap--contained input-wrap--small w-100"
+              [class.input-wrap--error]="imageFromUrlError">
+          <input type="URL" name="myURL" [(ngModel)]="myURL" class="input-wrap__input">
+        </div>
+      </div>
+    </div>
+    <div class="modal__container" *ngIf="!isTypeLink">
+      <label class="modal__upload-button" for="upload-files">
+        <span class="icon icon--plus"></span>
+      </label>
+      <input  ng2FileSelect hidden id="upload-files" name="upload-files" class="modal__upload-input"
+              type="file" [uploader]="driveUploader?.uploader" multiple
+              accept=".jpg, .jp2, .j2k, .jpf, .jpm, .jpg2, .j2c, .jpc, .jfif, .jpe, .png, .doc, .docx, .webp, .pdf, .xls, .xlsx, .ppt .txt, .mov, .mp4, .mkv, .gif, .svg" />
+      <ai-drive-uploader  (failedUploadFile)="failedUpload()" #driveUploader
+                          (success)="fileUploaded($event)" [oganizationId]="organizationId"
+                          [service]="serviceKey" [serviceFolder]="projectId">
+      </ai-drive-uploader>
+      <div class="modal__files-row" *ngIf="uploadedFiles?.length > 0">
+        <div  class="modal__file-item" (click)="onPreviewFileOpen(file)"
+              *ngFor="let file of uploadedFiles; let i = index">
+          <div  class="modal__file" tooltip="{{ file.name }}" placement='top' *ngIf="file.contentType.includes('image')"
+                [ngStyle]="{'background': 'url(data:image/png;base64,' + file.thumbnail +')'}"></div>
+          <video  class="modal__file" tooltip="{{ file.name }}" *ngIf="file.contentType.includes('video')"
+                  placement='top' src="{{ file.signedUrl }}"></video>
+          <div class="modal__file modal__file--document" tooltip="{{ file.name }}" *ngIf="file.contentType.includes('application')">
+            <span class="media__file-icon icon icon--file icon--active"></span>
+            <span class="media__file-extension file-extension">{{ file.name.split('.').pop() }}</span>
+          </div>
+          <span class="modal__remove-file"
+                  (click)="removeFile($event, i)">
+            <span class="icon icon--close icon--black icon--size-16px"></span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal__footer">
+    <button class="button button--ghost button--medium" (click)="isTypeLink ? close() : removeUploadedFiles()">Cancel</button>
+    <button class="button button--contained button--medium ml-2"
+            (click)="isTypeLink ? uploadImageFromLink(myURL) : saveUploadedImages()">
+      Upload
+    </button>
+  </div>  
+</ng-template>
+
+<ng-template #viewer>
+  <ai-file-viewer *ngIf="filesReceived" [files]="filesForViewer.length > 0 ? filesForViewer : files" (onCloseViewer)="onCloseViewer()"></ai-file-viewer>
+</ng-template>

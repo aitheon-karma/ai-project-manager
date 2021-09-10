@@ -1,0 +1,13 @@
+<ai-header [serviceName]="'Project Manager'"></ai-header>
+
+<div class="container-fluid">
+  <div class="row">
+    <main class="col-sm-12">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
+
+<ai-loading class="loading-container"
+            *ngIf="loading"></ai-loading>
+

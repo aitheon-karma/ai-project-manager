@@ -1,0 +1,205 @@
+<div class="project-member-form" *ngIf="!loading else loader">
+  <div *ngIf="entity == 'Members'" class="search-wrap search-wrap__outlined"
+    [class.notEmptySearch]="search?.value?.length && searchFocused" [class.searchFocus]="searchFocus">
+    <input type="search" placeholder="Find employee by name, email or group" class="search-wrap__input" #search
+      (input)="onSearch(search.value)" (blur)="onBlur()" [(ngModel)]="searchText" (click)="searchFocused = true"
+      (focus)="searchFocus = true">
+    <div class="search-wrap__button-clear" (click)="clearValue()"></div>
+  </div>
+  <div *ngIf="entity == 'Organization'" class="search-wrap search-wrap__outlined"
+    [class.notEmptySearch]="search.value.length && searchFocused" [class.searchFocus]="searchFocus">
+    <input type="search" placeholder="Find organization by name, email or group" class="search-wrap__input" #search
+      (input)="onSearchOrg(search.value)" (blur)="onBlur()" [(ngModel)]="searchText" (click)="searchFocused = true"
+      (focus)="searchFocus = true">
+    <div class="search-wrap__button-clear" (click)="clearValue()"></div>
+  </div>
+
+  <div class="employee-title mt-3 mb--8">
+    <span *ngIf="entity == 'Members'">EMPLOYEE LIST</span>
+    <span *ngIf="entity == 'Organization'">ORGANIZATION LIST</span>
+  </div>
+  <div class="settings-line"></div>
+  <div class="empty-employee-list-text mt--16" *ngIf="!members?.length">
+    <span *ngIf="entity == 'Members'">Use search to find employees</span>
+    <span *ngIf="entity == 'Organization'">Use search to find organizations</span>
+  </div>
+
+  <form *ngIf="entity == 'Members'" [formGroup]="membersInviteForm" class="mt--16">
+    <div class="mr-1" formArrayName="members">
+      <div class="member-item mb--4" *ngFor="let member of members.controls; let i= index;" formGroupName="{{i}}">
+        <img class="member-item__avatar" [src]="member.value.avatarUrl" alt="">
+        <div class="member-item__name-email ml--16 mr-auto">
+          <div class="name">
+            {{member.value.firstName}} {{member.value.lastName}}
+          </div>
+          <div class="email">
+            {{member.value.email}}
+          </div>
+        </div>
+        <div class="member-item__role">
+          <ng-select [items]="roles"
+                     [searchable]="false"
+                     [clearable]="false"
+                     class="dropdown dropdown--contained"
+                     bindLabel="name"
+                     bindValue="name"
+                     formControlName="role">
+          </ng-select>
+        </div>
+        <button class="button button--ghost button--medium ml--16" (click)="onRemove(member);">
+          Remove
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <!--Organization-->
+  <form *ngIf="inviteeOrgs?.length">
+    <div class="mt--16">
+      <div class="member-item mb--4" *ngFor="let org of inviteeOrgs; let i= index;">
+        <ngx-avatar name="{{org?.name}}" [src]="org?.profile?.avatarUrl"></ngx-avatar>
+        <div class="member-item__name-email ml--16 mr-auto">
+          <div class="name">
+            {{org?.name}}
+          </div>
+          <div class="email">
+            {{org?.domain}}
+          </div>
+        </div>
+        <button class="button button--ghost button--medium ml--16" (click)="onRemoveOrg(i, org);">
+          Remove
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <div class="members-search-result" *ngIf="searchText && !loading">
+    <div class="sub-text mb--8">Found {{resultedOrgs?.length}} matching {{resultedOrgs.length>1?'results':'result'}}
+    </div>
+    <div class="custom-search">
+      <div *ngIf="resultedOrgs && resultedOrgs?.length!=0; else noMembersFound;">
+        <div class="member-item mb--4" *ngFor="let org of resultedOrgs; let i= index;">
+          <ngx-avatar name="{{org?.name}}" [src]="org?.profile?.avatarUrl"></ngx-avatar>
+          <div class="member-item__name-email ml--16 mr-auto">
+            <div class="name">
+              {{org?.subName}}
+            </div>
+            <div class="email">
+              {{org?.subdomain}}
+            </div>
+          </div>
+          <div *ngIf="!invitedOrganizations.includes(org._id);else existingMember;">
+            <button class="button button--ghost button--medium ml--24" (click)="onClickOrg(org)"
+              *ngIf="checkAdded(org); else alreadyAdded;">
+              <span *ngIf="orgsToInvite.length<=0">Add</span>
+            </button>
+          </div>
+          <ng-template #alreadyAdded>
+            <button class="button button--ghost button--medium ml--24" (click)="onClickOrg(org)">
+              Remove</button>
+          </ng-template>
+          <ng-template #existingMember>
+            <div class="text-muted mt-2">
+              ADDED
+            </div>
+          </ng-template>
+        </div>
+      </div>
+      <ng-template *ngIf="entity=='Organization'" #noMembersFound>
+        <div class="no-members-found">
+          No organization found
+        </div>
+      </ng-template>
+    </div>
+    <div class="d-flex justify-content-end" *ngIf="resultedOrgs?.length!=0">
+      <div class="row my-2 pull-right mr-4">
+        <div class="btn btn-link" (click)="onDoneOrg();">
+          Done
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Organization-->
+
+  <div class="members-search-result" *ngIf="searchText && !loadingSearchResult && entity == 'Members'">
+    <div class="sub-text mb--8">Found {{searchResultArray?.length}} matching
+      {{searchResultArray?.length>1?'results':'result'}}</div>
+    <div class="custom-search">
+      <div *ngIf="searchResultArray && searchResultArray?.length!=0; else noMembersFound;">
+        <div class="member-item mb--4" *ngFor="let contact of searchResultArray; let i= index;">
+          <img class="member-item__avatar" *ngIf="contact?.user?.profile?.avatarUrl"
+            [src]="contact?.user?.profile?.avatarUrl" alt="">
+          <img class="member-item__avatar" *ngIf="!contact?.user?.profile?.avatarUrl" src="assets/contact.jpg">
+          <div class="member-item__name-email ml--16 mr-auto">
+            <div class="name">
+              {{contact?.user?.profile?.firstName}} {{contact?.user?.profile?.lastName}}
+            </div>
+            <div class="email">
+              {{contact?.user?.email  }}
+            </div>
+          </div>
+
+          <button *ngIf="existingProjectMembers.includes(contact.user._id);else add;"
+            class="icon icon--tick icon--size-24px mr--8" style="pointer-events: none;">
+          </button>
+
+          <ng-template #add>
+            <button class="button button--ghost button--medium ml--24" (click)="onClick(contact)"
+              *ngIf="(!tempArray?.includes(contact.user._id));else alreadyAdded;">
+              Add
+            </button>
+          </ng-template>
+
+          <ng-template #alreadyAdded>
+            <button class="button button--ghost button--medium ml--24" (click)="onClick(contact)">
+              Remove</button>
+          </ng-template>
+        </div>
+      </div>
+      <ng-template #noMembersFound>
+        <div class="no-members-found">
+          No members found
+        </div>
+      </ng-template>
+    </div>
+    <div class="d-flex justify-content-end" *ngIf="searchResultArray?.length!=0">
+      <div class="button button--ghost button--medium mt--8" (click)="onDone(); searchFocus = true;">
+        Done
+      </div>
+    </div>
+  </div>
+  <div *ngIf="loadingSearchResult" class="loader">
+    <ai-loading></ai-loading>
+  </div>
+  <div *ngIf="entity == 'Members'" class="mt-auto">
+    <div class="settings-line full-line mt--24"></div>
+    <div class="row d-flex justify-content-end mt-2">
+      <button class="button button--medium button--ghost mr--16" (click)="onClose(false)">
+        Cancel
+      </button>
+      <button class="button button--medium button--contained mr-3" *ngIf="!isMembersAdding;else loader"
+        [disabled]="!(members.controls.length) || isMembersAdding" (click)="onInvite()">
+        Invite
+      </button>
+    </div>
+  </div>
+  <div *ngIf="entity == 'Organization'" class="mt-auto">
+    <div class="settings-line full-line mt--24"></div>
+    <div class="row d-flex justify-content-end mt-2">
+      <button class="button button--medium button--ghost mr--16" (click)="onClose($event)">
+        Cancel
+      </button>
+      <button class="button button--medium button--contained mr-3" *ngIf="!isOrgsAdding;else loader"
+        [disabled]="!(inviteeOrgs.length) || isOrgsAdding" [class.disable]="!orgsToInvite?.length"
+        (click)="onInviteOrg()">
+        Invite
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #loader>
+  <div class="loader">
+    <ai-loading></ai-loading>
+  </div>
+</ng-template>

@@ -1,0 +1,48 @@
+<div>
+  <span class="uppercase-title mt--0">
+    Due Date
+  </span>
+  <div class="mb--16">
+    <label class="form-label">
+      Date
+    </label>
+    <div class="input-wrap input-wrap--date-contained"
+         [class.item-disabled]="taskReadonly">
+      <input #addDueDate
+             class="input-wrap__input"
+             [minDate]="minDueDate"
+             placeholder="MM/DD/YYYY"
+             readonly
+             bsDatepicker
+             placement="top center"
+             (bsValueChange)="onValueChange($event)"
+             [(ngModel)]="resultFinishDate"
+             [disabled]="taskReadonly"
+             [bsConfig]="{ showWeekNumbers: false, customTodayClass: 'custom-today-class'}">
+    </div>
+  </div>
+  <div>
+    <label class="form-label">
+      Time
+    </label>
+    <div class="time-input input-wrap input-wrap--contained input-wrap--small custome-timeDiv"
+         [class.item-disabled]="taskReadonly">
+      <input class="input-wrap__input custome-time"
+             type="text"
+             autocomplete="off"
+             placeholder="HH:MM"
+             min="0"
+             mask="00:00"
+             (input)="onValueChanges($event.target.value)"
+             [dropSpecialCharacters]="false"
+             [disabled]="taskReadonly"
+             [(ngModel)]="finishTime">
+            <small *ngIf="showDueDateError" class="text-danger d-flex align-items-center ml-2">
+              Enter valid Date
+            </small>
+      <!-- <button class="button button--medium button--contained custome-timezoon"
+        (click)="changeTimeZone($event)">{{timeZone}}</button> -->
+    </div>
+
+  </div>
+</div>

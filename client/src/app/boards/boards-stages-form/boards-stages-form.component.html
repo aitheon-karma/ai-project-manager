@@ -1,0 +1,65 @@
+<div>
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <h4 class="modal-title"> {{stage._id ? 'Edit':'New Column'}}</h4>
+    <button class="icon icon--close icon--dynamic" aria-label="Close" (click)="close()"></button>
+  </div>
+  <div class="modal-body modal-height">
+    <form [formGroup]="boardStageForm">
+      <div class="form-group">
+        <label for="enteredPipeLineName">Column Name</label>
+        <div [class.input-wrap--error]="boardStageForm.get('name').invalid && boardStageForm.get('name').dirty"
+             class="input-wrap input-wrap--outlined input-wrap--small">
+          <input #stageInput class="input-wrap__input"
+                 id="enteredPipeLineName"
+                 type="text"
+                 autofocus
+                 autocomplete="off"
+                 formControlName="name"
+                 maxlength="25">
+          <span class="input-wrap__counter"
+                *ngIf="boardStageForm.get('name').dirty">
+            {{ boardStageForm.get('name').value.length }}/25
+          </span>
+        </div>
+        <small *ngIf="boardStageForm.get('name').invalid && submitted" class="text-danger">
+          Column Name is required
+        </small>
+      </div>
+      <div class="form-group">
+          <label>State</label>
+          <ng-select class="dropdown dropdown--contained dropdown--outlined ngx-select-custom-width mr--8"
+            [items]="states"
+            bindLabel="name"
+            bindValue="_id"
+            [closeOnSelect]="true"
+            [searchable]="false"
+            [clearable]="false"
+            formControlName="state">
+          </ng-select>
+          <small *ngIf="boardStageForm.get('state').invalid && submitted" class="text-danger">
+            State is required
+          </small>
+        </div>
+      <div class="form-group mb--0">
+        <label>Column Color (Optional) </label>
+        <div class="color-picker">
+          <input [(colorPicker)]="color"
+                 [style.background]="color"
+                 [value]="boardStageForm.get('color').value"
+                 (colorPickerChange)="color"
+                 [cpPresetColors]="systemColors"
+                 cpPosition="bottom"
+                 formControlName="color" />
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer mt--16">
+    <button class="button button--medium button--ghost mr--8" (click)="close()">Cancel</button>
+    <button class="button button--medium button--contained"
+            [disabled]="boardStageForm.invalid"
+            (click)="saveStage()">
+      {{ stage._id ? 'Update' : 'Save' }}
+    </button>
+  </div>
+</div>

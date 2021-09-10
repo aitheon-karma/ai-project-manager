@@ -1,0 +1,32 @@
+<ng-template #formModal>
+  <div class="modal-content">
+    <!-- <div class="modal-header">
+      <h4 class="modal-title pull-left">{{ data.headlineText || 'Confirm' }} </h4>
+      <button type="button"
+              class="icon icon--close icon--dynamic"
+              aria-label="Close"
+              (click)="hide()">
+      </button>
+    </div> -->
+    <div *ngIf="data && data.text" class="modal-body">
+      <h4 class="modal-title">{{ data.headlineText || 'Confirm' }} </h4>
+      <div class="confirm-message">
+        {{ data.text }}
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="button button--medium button--ghost mr-auto"
+              [class.button--error]="data?.confirmText?.toLowerCase() === 'delete'"
+              (click)="onConfirm()"
+              type="button">
+        {{ data.confirmText || 'Confirm'}}
+      </button>
+      <button   *ngIf="showCancel"
+                [class.d-none]="data.hideNoButton"
+                class="button button--medium button--ghost"
+                (click)="cancel()">
+        {{ data.cancelText || 'Cancel'}}
+      </button>
+    </div>
+  </div>
+</ng-template>

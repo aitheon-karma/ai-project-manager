@@ -1,0 +1,82 @@
+<div class="epic-form">
+  <form class="form"
+        [formGroup]="epicForm">
+    <div class="mb--16">
+      <label  class="form-label"
+              [hidden]="epicForm.get('name').invalid && isSubmitted">
+        Name
+      </label>
+      <label *ngIf="epicForm.get('name').hasError('required') && isSubmitted"
+             class="text-danger">
+        Epic name is required
+      </label>
+      <div class="input-wrap input-wrap--contained input-wrap--small"
+            [class.input-wrap--error]="epicForm.get('name').invalid && isSubmitted">
+        <input  type="text"
+                class="input-wrap__input pr-5"
+                formControlName="name"
+                placeholder="Write an epic name"
+                autocomplete="off"
+                maxlength="40"
+                #name/>
+        <span class="input-wrap__counter">
+          {{ epicForm.get('name').value.length }}/40
+        </span>
+      </div>
+    </div>
+    <div class="mb--16">
+      <label  class="form-label"
+              [hidden]="epicForm.get('description').invalid && isSubmitted">
+        Description (Optional)
+      </label>
+      <div [class.textarea-wrap--error]="epicForm.get('description').hasError('required') && isSubmitted"
+           class="textarea-wrap textarea-wrap--contained textarea-wrap--max-size">
+        <textarea class="textarea-wrap__textarea"
+                  placeholder="Write your epic description here"
+                  formControlName="description"
+                  rows="3"
+                  maxlength="200"
+                  id="description"></textarea>
+        <span class="textarea-wrap__counter">
+          {{ epicForm.get('description').value.length }}/200
+        </span>
+      </div>
+    </div>
+    <div class="d-flex align-items-center w-100">
+      <div class="mb--16 w-100">
+        <label  class="form-label"
+                [hidden]="(epicForm.get('startDate').hasError('required')) && isSubmitted">
+          Start Date
+        </label>
+        <div  class="input-wrap input-wrap--date-contained">
+          <input type="text"
+                class="input-wrap__input"
+                placeholder="MM/DD/YYYY"
+                bsDatepicker
+                readonly
+                placement="top"
+                [maxDate]="epicForm.get('endDate').value"
+                formControlName="startDate"
+                [bsConfig]="{ showWeekNumbers: false, customTodayClass: 'custom-today-class'}">
+        </div>
+      </div>
+      <div class="mb--16 ml--16 w-100">
+        <label  class="form-label"
+                [hidden]="epicForm.get('endDate').invalid && isSubmitted">
+          End Date
+        </label>
+        <div class="input-wrap input-wrap--date-contained">
+          <input  type="text"
+                  class="input-wrap__input"
+                  placeholder="MM/DD/YYYY"
+                  bsDatepicker
+                  readonly
+                  placement="top"
+                  formControlName="endDate"
+                  [minDate]="epicForm.get('startDate').value"
+                  [bsConfig]="{ showWeekNumbers: false, customTodayClass: 'custom-today-class'}">
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

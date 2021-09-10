@@ -1,0 +1,62 @@
+.epics-dashboard {
+
+  &__head {
+    flex-wrap: nowrap;
+    margin: 24px 0;
+  }
+
+  &__title {
+    color: #fff;
+    font-size: 24px;
+    letter-spacing: 0px;
+    line-height: 32px;
+    white-space: nowrap;
+  }
+
+  &__head-right {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  &__head-divider {
+    height: 100%;
+    width: 1px;
+    border-left: 1px solid #454545;
+    margin: 0 24px;
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 24px;
+    padding-bottom: 24px;
+  }
+
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+    width: 100%;
+    color: #7e7e7e;
+  }
+
+  &__empty-img {
+    width: 150px;
+    height: 130px;
+    background: url('~/assets/empty.svg') center center no-repeat;
+    background-size: cover;
+  }
+
+  &__empty-text {
+    margin: 24px 0;
+    text-align: center;
+    font-size: 14px;
+    letter-spacing: 0.2px;
+    line-height: 20px;
+    color: #7e7e7e;
+  }
+}

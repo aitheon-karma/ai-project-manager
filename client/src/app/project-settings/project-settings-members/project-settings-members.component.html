@@ -1,0 +1,137 @@
+<div class="row justify-content-start mx-0">
+  <div class="col-9">
+    <div class="d-flex justify-content-between align-items-start">
+      <div>
+        <h2 class="settings-title mb--4">Members</h2>
+        <div class="settings-info">
+          People who were invited to this project
+        </div>
+      </div>
+      <button *ngIf="isMembersList" class="button button--medium button--contained"
+        (click)="openDialog(projectMemberModal)">
+        <span class="button__icon icon icon--size-16px icon--new-user"></span>
+        Invite People
+      </button>
+    </div>
+
+    <tabset class="tabs tabs--large mt--32">
+      <tab heading="Members" [active]="tabState == 1" (change)="switchTab(1)">
+        <div class="mt--16 mb--16">
+          <div *ngIf="isMembersList">
+            <div *ngIf="!loading else loader">
+              <div class="row mx-0" *ngIf="existingProjectMembers?.length>0">
+                <div class="col-7"><span class="list-titles">User</span></div>
+                <div class="col-5"><span class="list-titles ml--8">Role</span></div>
+              </div>
+              <div *ngIf="existingProjectMembers?.length>0 else noMembers">
+                <div class="member-item mb--4" *ngFor="let member of existingProjectMembers">
+                  <div class="mr--24">
+                    <img class="member-item__avatar" *ngIf="member?.user?.profile?.avatarUrl"
+                         [src]="member?.user?.profile?.avatarUrl">
+                    <img class="member-item__avatar" *ngIf="!member?.user?.profile?.avatarUrl" src="assets/contact.jpg">
+                  </div>
+                  <div class="member-item__name-email mr-auto">
+                    <div class="name">
+                      {{member?.user?.profile?.firstName }} {{member?.user?.profile?.lastName}}
+                    </div>
+                    <div class="email">
+                      {{member?.user?.email}}
+                    </div>
+                  </div>
+                  <div class="member-item__role">
+                    <ng-select id="idRoleDropDown"
+                               [ngModel]="member.role"
+                               [items]="roles"
+                               (change)="updateRole(member,$event)"
+                               [searchable]="false"
+                               [clearable]="false"
+                               class="dropdown dropdown--contained"
+                               bindLabel="name"
+                               bindValue="value"
+                               placeholder="Select Role">
+                    </ng-select>
+                  </div>
+                  <button [ngClass]="{'creator-member': member.isCreator}" [disabled]="member.isCreator"
+                          (click)="removeMember(member,member.isCreator)" class="button button--ghost button--medium button--error ml--24">
+                    Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ng-template #noMembers>
+            <div class="no-members">
+              No members found
+            </div>
+          </ng-template>
+        </div>
+      </tab>
+      <tab heading="Shared" [active]="tabState == 2" (change)="switchTab(2)">
+        <div class="mt--16 mb--16">
+          <div>
+            <div *ngIf="!loading else loader">
+              <div class="row mx-0" *ngIf="sharedUsers?.length;else nosharedUsers">
+                <div class="col-7"><span class="list-titles">User</span></div>
+                <div class="col-5 text-right"><span class="list-titles">Role</span></div>
+              </div>
+              <div class="member-item mb--4 row mx-0" *ngFor="let sharedUser of sharedUsers">
+                <div class="col-7 p-0 d-flex align-items-center justify-content-between">
+                  <div class="mr--24">
+                    <img class="member-item__avatar" *ngIf="sharedUser?.user?.profile?.avatarUrl"
+                         [src]="sharedUser?.user?.profile?.avatarUrl">
+                    <img class="member-item__avatar" *ngIf="!sharedUser?.user?.profile?.avatarUrl" src="assets/contact.jpg">
+                  </div>
+                  <div class="member-item__name-email mr-auto">
+                    <div class="name">
+                      {{sharedUser?.user?.profile?.firstName }} {{sharedUser?.user?.profile?.lastName}}
+                    </div>
+                    <div class="email">
+                      {{sharedUser?.organization?.name }}
+                    </div>
+                  </div>
+                </div>
+                <div class="member-item__role col-5 p-0 text-right">
+                  <div class="dropdown-wrap dropdown-wrap--disabled">
+                    <ng-select [ngModel]="sharedUser.role"
+                               [items]="roles"
+                               class="dropdown dropdown--contained "
+                               bindLabel="name"
+                               bindValue="value"
+                               placeholder="Select Role"
+                               disabled>
+                    </ng-select>
+                  </div>
+                </div>
+              </div>
+              <ng-template #nosharedUsers>
+                <div class="no-members">
+                  No shared users found.
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </tab>
+    </tabset>
+  </div>
+</div>
+
+<ng-template #loader>
+  <div class="text-center">
+    <ai-loading></ai-loading>
+  </div>
+</ng-template>
+
+<ng-template #projectMemberModal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Invite people</h4>
+    <button type="button" class="icon icon--close pull-right" aria-label="Close" (click)="onCloseDialog(false)">
+    </button>
+  </div>
+  <div class="modal-body">
+    <ai-invite-form [entity]="service" (onInvited)="onInvited()" (onCancel)="onCloseDialog($event)" class="no-border">
+    </ai-invite-form>
+  </div>
+</ng-template>
+
+<ai-generic-confirm #genericConfirm></ai-generic-confirm>

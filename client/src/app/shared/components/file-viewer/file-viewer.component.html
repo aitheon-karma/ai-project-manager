@@ -1,0 +1,49 @@
+<div class="modal-content modal-content--preview">
+  <div class="modal-header">
+    <h4 class="modal-title ellipsis pull-left">
+      File name: {{ files[index]?.name }}
+    </h4>
+    <div class="ml-auto d-flex align-items-center">
+      <button type="button"
+              class="icon icon--close icon--dynamic ml--16"
+              (click)="close()"
+              aria-label="Close">
+      </button>
+    </div>
+  </div>
+  <div class="file-container" *ngIf="files.length > 0">
+    <div class="file-container__image" *ngIf="files[index]?.contentType.includes('image')">
+      <img [src]="files[index].signedUrl">
+    </div>
+    <div *ngIf="files[index]?.contentType.includes('video')" class="file-container__video">
+      <video autoplay="autoplay" src="{{ files[index]?.signedUrl }}" controls></video>
+    </div>
+    <div *ngIf="files[index]?.contentType.includes('pdf')" class="file-container__iframe">
+      <iframe [src]="sanitizer.bypassSecurityTrustResourceUrl(files[index]?.signedUrl)" height="100%" width="100%"></iframe>
+    </div>
+    <div  *ngIf=" !files[index]?.contentType.includes('image') && 
+                  !files[index]?.contentType.includes('video') && 
+                  !files[index]?.contentType.includes('pdf')" 
+          class="file-container__others">
+      <div class="file-container__unreadable">
+        <span class="icon icon--download"></span>
+        <span class="file-container__unreadable-text">
+          Unfortunately we can't show this type of file in out viewer but you can 
+            <a  download="{{ files[index]?.signedUrl }}" href="{{ files[index]?.signedUrl }}"
+                class="file-container__unreadable-link">download</a> it.
+        </span>
+      </div>
+    </div>
+    <span class="file-container__nav-icon file-container__nav-icon--prev"
+          (click)="prevImage()" *ngIf="files.length > 1">
+      <img src="assets/slide-prev.svg" alt="Previous">
+    </span>
+    <span class="file-container__nav-icon file-container__nav-icon--next"
+          (click)="nextImage()" *ngIf="files.length > 1">
+      <img src="assets/slide-next.svg" alt="Next">
+    </span>
+    <span class="file-container__counter">
+      {{ index + 1 + ' / ' + files.length}}
+    </span>
+  </div>
+</div>

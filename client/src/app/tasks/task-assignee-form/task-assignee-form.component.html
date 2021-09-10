@@ -1,0 +1,70 @@
+<div class="assignee mb--24">
+    <label class="form-label w-100">
+        Assignee (Optional)
+    </label>
+    <div class="assignee__add">
+        <button type="button" class="icon icon--plus icon--dynamic mr--8"
+                (click)="showSearchAndFocus()"
+                [disabled]="task.readOnly || taskReadonly"
+                [class.button--disabled]="task.readOnly || taskReadonly"></button>
+            <div    *ngFor="let assignee of assignedMembers;index as i"
+                    [class.item-disabled]="task.readOnly || taskReadonly"
+                    class="chip chip--icon-left chip--icon-right chip--selected parent-tt mb--4 mr--4"
+                    tooltip="{{assignee?.profile?.firstName}} {{assignee?.profile?.lastName}}"
+                    continer="body">
+              <div class="chip__icon-wrap--left avatar avatar--16"
+                  style="background-color: #25A466">
+                  {{assignee?.profile?.avatarUrl ? '' : assignee?.profile?.firstName.slice(0, 1)}}{{assignee?.profile?.avatarUrl ? '' : assignee?.profile?.lastName.slice(0, 1)}}
+                  <img *ngIf="assignee?.profile?.avatarUrl"
+                      style="height: 16px;width:16px;"
+                      [src]="assignee?.profile?.avatarUrl" alt="">
+              </div>
+              <span   class="chip__text">
+                  {{assignee?.profile?.firstName}} {{assignee?.profile?.lastName}}
+              </span>
+              <button type="button"
+                      (click)="remove(assignee)"
+                      class="chip__icon-wrap--right chip__icon-wrap--pointer icon icon--cancel-circle-f icon--size-16px"
+                      [class.button--disabled]="task.readOnly || taskReadonly">
+              </button>
+            </div>
+
+  
+        <div class="assignee__add__list" *ngIf="searchControl.value || showSearch">
+            <button type="button" class="button button--ghost button--small mx-2 mb-0 mt-2"
+                    (click)="add(currentUser)" [disabled]="currentIsAssigned">Assign to me</button>
+            <div class="p--8">
+                <div class="search-wrap search-wrap__contained"
+                     [class.notEmptySearch]="searchControl.value?.length && searchFocused"
+                     [class.searchFocus]="searchFocused">
+                    <input type="search" placeholder="Search"
+                            [formControl]="searchControl"
+                            #searchElement
+                            (blur)="hideSearch()"
+                           class="search-wrap__input">
+                    <div class="search-wrap__button-clear"></div>
+                </div>
+            </div>
+            <div class="scroll">
+                <div class="assignee__add__list__item scroll" *ngFor="let user of searchResults" (click)="add(user)">
+                    <div class="avatar avatar--32 mr--8"
+                         style="background-color: blueviolet;">
+                        {{ user?.profile?.avatarUrl ? '' : firstLetters(user) }}
+                        <img *ngIf="user?.profile?.avatarUrl"
+                             style="height: 34px;width:34px;"
+                             [src]="user?.profile?.avatarUrl" alt="">
+                    </div>
+                    <div>
+                        {{user?.profile?.firstName}} {{user?.profile?.lastName}}
+                    </div>
+                </div>
+            </div>
+            <div class="assignee__add__list__item"
+                 *ngIf="searchControl?.value?.length > 1 && !searchResults?.length">
+                No members found in project
+            </div>
+  
+        </div>
+    </div>
+  </div>
+  

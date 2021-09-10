@@ -1,0 +1,172 @@
+.search-wrap {
+    background-color: #1f1f1f;
+  }
+
+  .settings-line {
+    background: rgb(69, 69, 69);
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+    height: 1px;
+    width: 100%;
+  }
+
+  .full-line {
+    width: calc(100% + 32px);
+    margin-left: -16px;
+  }
+
+
+  //
+  // <--- General
+  //
+
+  .project-member-form {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    min-height: 480px;
+
+  }
+
+  .employee-title {
+    color: rgb(126, 126, 126);
+    font-size: 10px;
+    letter-spacing: 1px;
+    line-height: 16px;
+    text-transform: uppercase;
+  }
+
+  .sub-text {
+    color: rgb(126, 126, 126);
+    font-size: 12px;
+    letter-spacing: 0.3px;
+    line-height: 20px;
+  }
+
+  .members-search-result {
+    width: 515px;
+    padding: 16px;
+    position: absolute;
+    background: rgb(43, 43, 43);
+    border-radius: 2px;
+    z-index: 1;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.4);
+    margin-top: 40px;
+  }
+
+  .empty-employee-list-text {
+    color: rgb(126, 126, 126);
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 0.3px;
+  }
+
+  .divider {
+    background: rgb(69, 69, 69);
+    border-radius: 0;
+    margin-top: 9px;
+  }
+
+  .no-members-found {
+    color: white;
+    font-size: 16px;
+    letter-spacing: 0.3px;
+    line-height: 20px;
+    margin-left: 172px;
+    margin-top: 23px;
+  }
+
+  ::ng-deep .m-width {
+    max-width: 549px !important;
+  }
+
+  .member-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 8px 16px;
+    background: #383838;
+    border-radius: 2px;
+
+    &__avatar {
+      border-radius: 50%;
+      height: 35px;
+      width: 35px;
+      object-fit: cover;
+      object-position: 50% 50%;
+    }
+
+    &__name-email {
+      max-width: 210px;
+      word-break: break-all;
+
+      .name {
+        color: #fff;
+        font-size: 14px;
+        font-weight: normal;
+        letter-spacing: 0.2px;
+        line-height: 20px;
+      }
+      .email {
+        color: rgb(126, 126, 126);
+        font-size: 12px;
+        letter-spacing: 0.3px;
+        line-height: 20px;
+      }
+    }
+
+    &__role {
+      min-width: 128px;
+      background-color: #1f1f1f;
+    }
+
+    &__remove {
+      color: rgb(220, 188, 101);
+      padding: 16px 24px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      line-height: 20px;
+      text-transform: uppercase;
+    }
+  }
+
+  .custom-search {
+    max-height: 290px !important;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .disable {
+    opacity: 0.5 !important; /* Fade effect */
+    cursor: not-allowed; /* Cursor change to disabled state*/
+  }
+
+  .member-list {
+    position: absolute;
+    height: 290px !important;
+    width: 100%;
+    overflow-y: auto;
+  }
+
+  .member-list::-webkit-scrollbar,
+  .custom-search::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  .member-list::-webkit-scrollbar-track,
+  .custom-search::-webkit-scrollbar-track {
+    background: #1f1f1f;
+  }
+
+  .member-list::-webkit-scrollbar-thumb,
+  .custom-search::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  .member-list::-webkit-scrollbar-thumb:hover,
+  .custom-search::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }

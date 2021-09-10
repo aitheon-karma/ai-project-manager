@@ -1,0 +1,81 @@
+<div class="row project-dashboard">
+  <div class="container">
+    <div class="menu">
+      <ul class="nav">
+        <li class="nav-item" *ngIf="projectStatus == 'ACTIVE'">
+          <a  class="nav-link"
+              routerLinkActive="active"
+              [routerLink]="['/dashboard']"
+              [queryParams]="{tab: 'projects'}"
+              [routerLinkActiveOptions]="{exact: true}">
+            All Projects
+          </a>
+        </li>
+        <li class="nav-item" *ngIf="projectStatus == 'ARCHIVED'">
+          <a  class="nav-link"
+              routerLinkActive="active"
+              routerLink="/dashboard"
+              [queryParams]="{tab: 'archived'}"
+              [routerLinkActiveOptions]="{exact: true}">
+            All Archived Projects
+          </a>
+        </li>
+        <li class="position-relative nav-item">
+          <a  class="nav-link"
+              routerLinkActive="active"
+              routerLink="project-dashboard">
+            Project Dashboard
+          </a>
+        </li>
+        <li class="position-relative nav-item"
+            *ngFor="let board of boards">
+          <a  class="nav-link"
+              routerLinkActive="active"
+              [routerLink]="['boards', board._id]">
+            {{ board.name }}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a  class="nav-link"
+              routerLinkActive="active"
+              routerLink="backlog">
+            Backlog
+          </a>
+        </li>
+        <li class="nav-item">
+          <a  class="nav-link"
+              routerLinkActive="active"
+              routerLink="media">
+            Media
+          </a>
+        </li>
+        <li class="position-relative nav-item" *ngIf="settingsGuard.canActivate() | async">
+          <a  class="nav-link"
+              routerLinkActive="active"
+              routerLink="settings"
+              >
+            Settings
+          </a>
+        </li>
+      </ul>
+      <button class="project__automate button button--contained button--small mr-2 ml-auto"
+              (click)="goToProjectAutomation()">
+        <span class="icon icon--automate"></span>
+        Automation
+      </button>
+      <button class="change-label__new-label button button--ghost button--small"
+              (click)="openCreateModal()"
+              *ngIf="projectStatus !== 'ARCHIVED'">
+        <span class="button__icon icon icon--plus icon--size-16px"></span>
+        Create Task
+      </button>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <main class="col-sm-12">
+    <router-outlet></router-outlet>
+  </main>
+</div>
+
+<ai-task-modal [headerMode]="true"></ai-task-modal>

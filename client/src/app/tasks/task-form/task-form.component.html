@@ -1,0 +1,230 @@
+<div class="task-form" *ngIf="!loading; else loadingView">
+
+  <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="row task-form__body">
+    <div class="task-form__container">
+      <div class="task-form__left br">
+        <div class="task-form__left-container"
+          #taskFormScrollContainer>
+          <div class="task-form__title-wrap">
+            <div class="input-wrap input-wrap--ghost input-wrap--new-ghost task-form__task-name"
+                [class.item-disabled]="task.readOnly || isArchived">
+              <input formControlName="name"
+                    (focus)="ghostFocus=true"
+                    (blur)="ghostFocus=false"
+                    class="input-wrap__input overflow-hidden task-form__name"
+                    type="text"
+                    autocomplete="off"
+                    placeholder="Task Name"
+                    maxlength="80"
+                    #taskNameInput>
+              <span class="input-wrap__icon icon icon--edit" (click)="focusInput($event, taskNameInput)"></span>
+              <span class="input-wrap__counter"
+                    *ngIf="ghostFocus">
+                {{ taskForm.get('name').value ? taskForm.get('name').value.length : 0 }} / 80
+              </span>
+            </div>
+            <label *ngIf="taskForm.get('name').invalid && submitted"
+                  class="task-form__name-label text-danger">
+              Task name is required
+            </label>
+          </div>
+
+          <div class="mb--24">
+            <label  class="form-label"
+                    [hidden]="taskForm.get('type').invalid && submitted">
+              Task type
+            </label>
+            <label class="text-danger" *ngIf="taskForm.get('type').invalid && submitted">
+              Task type is required
+            </label>
+            <ng-select  class="dropdown dropdown--contained"
+                        formControlName="type"
+                        [items]="[TaskType.TASK, TaskType.STORY, TaskType.ISSUE]"
+                        [searchable]="false"
+                        [clearable]="false"
+                        [class.item-disabled]="!isNew">
+            </ng-select>
+          </div>
+
+          <div class="mb--24">
+            <label class="form-label">Description</label>
+            <ai-rich-text-editor formControlName="description"
+                                customClass="description-editor"
+                                (mentionCreated)="onMentionCreated($event)"
+                                [disable]="task.readOnly || isArchived"
+                                [config]="descriptionConfig"></ai-rich-text-editor>
+          </div>
+
+          <ai-tasks-attachments (fileUploaded)="fileUploaded($event)" 
+                                [project]="project" 
+                                [task]="task" 
+                                [taskReadonly]="taskReadonly" 
+                                (fileRemoved)="fileRemoved($event)">
+          </ai-tasks-attachments>
+
+          <ai-task-subtasks  [parentTask]="task" *ngIf="!isNew && !task.parent" [createMode]="subTaskMode" [board]="board" [taskReadonly]="taskReadonly"></ai-task-subtasks>
+
+          <ai-task-comments [taskReadonly]="taskReadonly"
+                            [taskId]="task._id"
+                            [projectId]="task.project"
+                            (taskComments)="getTaskComments($event)"
+                            *ngIf="task._id"></ai-task-comments>
+        </div>
+        <div class="task-form__comment-form-section" *ngIf="!isNew">
+          <ai-task-comments-form *ngIf="!taskReadonly"
+                                [taskId]="task._id"
+                                [projectId]="task.project">
+          </ai-task-comments-form>
+        </div>
+      </div>
+
+      <div class="task-form__right p--24">
+        <div class="mb--24">
+          <label  class="form-label"
+                  [hidden]="taskForm.get('stage').invalid && submitted">
+            Column
+          </label>
+          <label  class="text-danger"
+                  *ngIf="taskForm.get('stage').invalid && submitted">
+            Column is required
+          </label>
+          <ng-select class="dropdown dropdown--contained stage-dropdown"
+                    formControlName="stage"
+                    [items]="stages"
+                    bindValue="_id"
+                    bindLabel="name"
+                    [searchable]="false"
+                    [clearable]="false"
+                    [class.item-disabled]="task.readOnly || isArchived">
+          </ng-select>
+        </div>
+
+        <div class="mb--24">
+          <label  class="form-label"
+                  [hidden]="taskForm.get('priority').invalid && submitted">
+            Priority
+          </label>
+          <label  class="text-danger"
+                  *ngIf="taskForm.get('priority').invalid && submitted">
+            Priority is required</label>
+          <ng-select class="dropdown dropdown--contained"
+                    formControlName="priority"
+                    [items]="priorities"
+                    bindValue="value"
+                    bindLabel="name"
+                    [searchable]="false"
+                    [clearable]="false"
+                    [class.item-disabled]="task.readOnly || isArchived">
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+              <div class="ng-value" *ngFor="let item of items | slice:0:1">
+                <div class="d-flex align-items-center">
+                  <div class="{{ item.arrowClass }} mr--8 mt--4">
+                        <span class="icon icon--arrow-up icon--size-16px">
+                        </span>
+                  </div>
+                  {{ item.name }}
+                </div>
+              </div>
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+              <div class="d-flex align-items-center">
+                <div class="{{ item.arrowClass }} mr--8 mt--4">
+                    <span class="icon icon--arrow-up icon--size-16px">
+                    </span>
+                </div>
+                {{ item.name }}
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+
+        <ai-task-assignee-form  (assigneeAdded)="assigneeAdded($event)" 
+                                (assigneeRemoved)="assigneeRemoved($event)" 
+                                [projectId]="params.project" 
+                                [task]="task" 
+                                [taskReadonly]="taskReadonly">
+        </ai-task-assignee-form>
+
+        <ai-task-labels (labelAdded)="labelAdded($event)"
+                        (labelRemoved)="labelRemoved($event)"
+                        [projectId]="params.project"
+                        [task]="task"
+                        [taskReadonly]="taskReadonly"
+                        [isAdmin]="isAdmin">
+        </ai-task-labels>
+
+        <ai-tasks-epics (epicAdded)="epicAdded($event)" 
+                        (epicRemoved)="epicRemoved($event)" 
+                        [projectId]="params.project" 
+                        [task]="task" 
+                        [taskReadonly]="taskReadonly">
+        </ai-tasks-epics>
+
+        <hr class="line">
+        
+        <button class="button button--ghost button--medium mr-auto"
+                *ngIf="!isDueDateEnabled"
+                (click)="isDueDateEnabled = true"
+                [class.button--disabled]="task.readOnly || isArchived"
+                [disabled]="task.readOnly || isArchived">
+          Add Due Date
+        </button>
+
+        <ai-task-due-date *ngIf="isDueDateEnabled"
+                          formControlName="finishDate"
+                          [finishDate]="task.orchestratorTask.finishDate"
+                          [taskReadonly]="taskReadonly">
+        </ai-task-due-date>
+
+        <button class="button button--ghost button--medium button--error mt--16 mr-auto" *ngIf="isDueDateEnabled && !task.readOnly && !isArchived"
+          (click)="removeDueDate()">
+          <span class="button__icon icon icon--size-16px icon--archive"></span>
+          REMOVE DUE DATE
+        </button>
+        <small *ngIf="taskForm.get('finishDate').touched && taskForm.get('finishDate').hasError('pattern')" class="text-danger">
+          Enter valid time
+        </small>
+        <hr class="line">
+
+        <div *ngIf="task._id" class="container-fluid pl-0">
+          <p class="task-info mb--4">
+              Created {{ task.createdAt | date:'MMM dd,yyyy h:mm a' }}
+          </p>
+          <p class="task-info mb--4" *ngIf="task?.createdAt != task?.updatedAt">
+              Updated {{ task.updatedAt | date:'MMM dd,yyyy h:mm a' }}
+          </p>
+          <p class="task-info" *ngIf="task.orchestratorTask.createdBy">
+              Created by {{ task.orchestratorTask.createdBy.profile?.firstName }} {{ task.orchestratorTask.createdBy.profile?.lastName }}
+          </p>
+      </div>
+      </div>
+    </div>
+    <div *ngIf="isNew" class="col-12 d-flex align-items-center justify-content-end bt mt-auto bt task-form__footer">
+      <button class="button button--ghost button--medium mr-3"
+              (click)="cancel()"
+              type="button">
+        Cancel
+      </button>
+      <button class="button button--medium button--contained"
+              type="submit"
+              [disabled]="task.readOnly || isArchived || taskForm.invalid"
+              *ngIf="!isSaving;else savingView">
+        {{ isNew ? 'Create Task': 'Update Task' }}
+      </button>
+
+    </div>
+  </form>
+</div>
+
+
+<ng-template #loadingView>
+  <div style="height: 742px;" class="d-flex">
+    <ai-loading class="m-auto"></ai-loading>
+  </div>
+</ng-template>
+
+<ng-template #savingView>
+  <div >
+    <ai-loading class="m-auto"></ai-loading>
+  </div>
+</ng-template>

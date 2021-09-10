@@ -1,0 +1,114 @@
+.subtask-type {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+}
+
+.subtask-header {
+
+  &__section {
+    margin: 0;
+  }
+
+  &__hr {
+    margin-bottom: 8px;
+    border-top: 1px solid #454545;
+  }
+
+  &__title {
+    font-size: 10px;
+    line-height: 10px;
+    letter-spacing: 1px;
+    color: #7e7e7e;
+    text-transform: uppercase;
+  }
+}
+
+.subtask-item {
+  position: relative;
+  background: #383838;
+  border-radius: 2px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: rgb(255, 255, 255);
+  font-size: 14px;
+  letter-spacing: 0.2px;
+  line-height: 25px;
+  overflow: hidden;
+  margin-bottom: 4px;
+
+  &__name {
+    max-width: 150px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-right: auto;
+  }
+
+  &__avatar {
+    min-width: 25px;
+    margin-left: 16px;
+  }
+
+  &__comments {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.subtask-type {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.stage-color {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+}
+
+ai-loading{
+  margin-left: 39%;
+}
+
+.subtask-type {
+  &__issue {
+    background-color: #e96058;
+  }
+  &__task {
+    background-color: #7e7e7e;
+  }
+  &__story {
+    background-color: #589be9;
+  }
+}
+
+.no-subtask {
+  color: #7e7e7e;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+  line-height: 20px;
+}
+
+.button--small {
+  min-height: auto;
+  font-size: 10px;
+}
+
+.item-disabled {
+  user-select: none;
+  pointer-events: none;
+  cursor: not-allowed;
+}

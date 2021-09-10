@@ -1,0 +1,50 @@
+.container {
+  max-width: 1224px !important;
+  padding: 0;
+}
+
+.menu {
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.nav {
+  border-radius: 0;
+  height: 48px !important;
+  background: #2b2b2b;
+  align-items: center;
+}
+
+.nav-item {
+
+  &:first-child {
+    margin-right: 32px;
+    border-right: 1px solid #454545;
+  }
+}
+
+.nav-link {
+  border-radius: 0;
+  padding: 4px 0;
+  cursor: pointer;
+  color: #7e7e7e;
+  -webkit-transition: .3s linear;
+  transition: all linear .3s;
+  margin: auto 0;
+  font-size: 14px;
+  margin-right: 32px !important;
+  background: transparent;
+}
+
+.project-dashboard {
+  background-color: #2b2b2b;
+  position: fixed;
+  z-index: 101;
+  width: 100%;
+  margin-bottom: 20px;
+}

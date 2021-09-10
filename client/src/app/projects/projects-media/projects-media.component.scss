@@ -1,0 +1,248 @@
+.media {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 24px;
+
+    &__top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    &__top-buttons {
+        display: flex;
+    }
+
+    &__title {
+        margin: 0;
+        color: #fff;
+        font-size: 22px;
+        letter-spacing: 0.3px;
+        line-height: 24px;
+    }
+
+    &__section {
+        width: 100%;
+        margin-top: 24px;
+    }
+
+    &__section-top {
+        display: flex;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+
+    &__section-title {
+        color: #fff;
+        font-size: 18px;
+        letter-spacing: 0.3px;
+        line-height: 24px;
+        margin-right: 12px;
+        margin-bottom: 0;
+    }
+
+    &__files-container {
+        
+
+        &--images,
+        &--videos,
+        &--other {
+            display: grid;
+            grid-template-columns: repeat(11, 98px);
+            grid-gap: 8px;
+        }
+    }
+
+    &__image-item,
+    &__video-item,
+    &__file-item {
+        position: relative;
+        width: 98px;
+        height: 98px;
+        max-width: 98px;
+        max-height: 98px;
+        border: 1px solid #383838;
+
+        &:hover {
+            border: 1px solid #dcbc65;
+            transition: .3s ease-in-out;
+        }
+    }
+
+    &__image,
+    &__video,
+    &__file {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 2px;
+        background-repeat: no-repeat !important;
+        background-position: center center !important;
+        background-size: cover !important;
+        transition: .2s ease-in-out;
+        cursor: pointer;
+    }
+
+    &__file {
+        background: #2b2b2b;
+        cursor: default;
+    }
+
+    &__file-icon {
+        width: 48px;
+        max-height: 48px;
+        margin-top: -8px;
+        font-size: 48px;
+        line-height: 48px;
+    }
+
+    &__download-icon {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        text-decoration: none;
+    }
+
+    &__file-extension {
+        position: absolute;
+        bottom: 44px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        font-weight: 600;
+        font-size: 10px;
+        letter-spacing: 0.2px;
+        color: #1f1f1f;
+    }
+
+    &__file-name {
+        position: absolute;
+        width: 100%;
+        padding: 4px;
+        bottom: 0;
+        left: 0;
+        font-size: 12px;
+        line-height: 12px;
+        color: #fff;
+        letter-spacing: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        background: rgba(#1f1f1f, 0.8);
+        cursor: pointer;
+    }
+}
+
+.modal {
+
+    &__upload-button {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 64px;
+        width: 64px;
+        margin-bottom: 24px;
+        border: 1px dashed #454545;
+        cursor: pointer;
+    }
+
+    &__upload-input {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+    }
+
+    &__files-row {
+        display: grid;
+        grid-template-columns: repeat(6, 64px);
+        grid-gap: 8px;
+    }
+
+    &__file-item {
+        width: 64px;
+        height: 64px;
+        max-width: 64px;
+        max-height: 64px;
+        position: relative;
+    }
+
+    &__file {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 64px;
+        height: 64px;
+        max-width: 64px;
+        max-height: 64px;
+        border: 1px solid #383838;
+        border-radius: 2px;
+        background-repeat: no-repeat !important;
+        background-position: center center !important;
+        background-size: cover !important;
+        transition: .2s ease-in-out;
+        cursor: pointer;
+
+        &:hover {
+            border: 1px solid #dcbc65;
+            transition: .3s ease-in-out;
+        }
+
+        &--document {
+
+            .icon--file {
+                
+                &:before {
+                    font-size: 14px;
+                    text-align: center;
+                }
+            }
+
+            .file-extension {
+                font-size: 10px;
+                background-origin: 10px;
+            }
+        }
+    }
+
+    &__container {
+        padding: 16px;
+    }
+
+    &__footer {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        padding: 8px 12px;
+        border-top: 1px solid #454545;
+    }
+
+    &__remove-file {
+        position: absolute;
+        top: -9px;
+        right: -8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        left: auto;
+        background: #7e7e7e;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        transform: translate(0);
+        outline: none;
+        cursor: pointer;
+      }
+}

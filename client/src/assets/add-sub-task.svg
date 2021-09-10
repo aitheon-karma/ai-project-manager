@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59.1 (86144) - https://sketch.com -->
+    <title>add-sub-task-24</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M16,17 C16.5522847,17 17,17.4477153 17,18 L17,20 C17,20.5522847 16.5522847,21 16,21 L12,21 C11.4477153,21 11,20.5522847 11,20 L11,18 C11,17.4477153 11.4477153,17 12,17 L16,17 Z M10,3 C10.5522847,3 11,3.44771525 11,4 L11,8 C11,8.55228475 10.5522847,9 10,9 L8,9 L8,20 L6,20 L6,9 L4,9 C3.44771525,9 3,8.55228475 3,8 L3,4 C3,3.44771525 3.44771525,3 4,3 L10,3 Z M16,11 C16.5522847,11 17,11.4477153 17,12 L17,14 C17,14.5522847 16.5522847,15 16,15 L12,15 C11.4477153,15 11,14.5522847 11,14 L11,12 C11,11.4477153 11.4477153,11 12,11 L16,11 Z M8,12 L11,12 L11,14 L8,14 L8,12 Z M11,18 L11,20 L8,20 L8,18 L11,18 Z M19,3 L19,5 L21,5 L21,7 L19,7 L19,9 L17,9 L17,7 L15,7 L15,5 L17,5 L17,3 L19,3 Z" id="path-1"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon-/-24-cont-/-actions-/-add-sub-task-24" transform="translate(-3.000000, -3.000000)">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <use id="Combined-Shape" fill="#7E7E7E" fill-rule="evenodd" xlink:href="#path-1"></use>
+            <g id="Colors-/-Dark-Theme-/-Grayscale-/-Filled-/-$base-gray" mask="url(#mask-2)" fill="#7E7E7E" fill-rule="evenodd">
+                <rect id="Dark-Theme-/-Grayscale-/-Filled-/-$base-gray" x="0" y="0" width="24" height="24"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

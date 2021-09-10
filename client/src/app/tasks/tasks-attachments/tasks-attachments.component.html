@@ -1,0 +1,51 @@
+<div class="mb--24">
+  <label class="form-label">
+      Attachments
+  </label>
+  <div>
+    <div class="attachments">
+      <div  class="attachments__drop-image-container" *ngFor="let file of files; let i = index"
+            (click)="onPreviewFileOpen(file)" [adaptivePosition]="false"
+            [class.attachments__drop-image-container--disabled]="task?.readOnly || taskReadonly"
+            tooltip="{{file.name}}" placement='auto' [adaptivePosition]="true" container="body" containerClass="taskAttachmentTooltip">
+        <div class="attachments__item-background"></div>
+        <img  *ngIf="isFileImage(file)" class="attachments__uploaded-file"
+              src="{{ file._id?.thumbnail ? 'data:image/png;base64,' + file._id?.thumbnail : file.signedUrl }}">
+        <div *ngIf="!isFileImage(file) && !file.contentType.includes('video')"
+            class="icon-wrapper attachments__uploaded-file">
+            <i class="fa fa-file-o document-icon"></i>
+            <span class="file-extension">{{ file.name.split('.').pop() }}</span>
+        </div>
+        <div *ngIf="file.contentType.includes('video')" class="attachments__uploaded-file attachments__uploaded-file--video">
+          <video src="{{ file.signedUrl }}"></video>
+          <span class="attachments__play-icon icon icon--play icon--active-open icon--gold"></span>
+        </div>
+        <button class="attachments__remove-item icon icon--close icon--white icon--size-16px"
+                (click)="openDynamicConfirm($event, i)">
+        </button>
+        <ai-dynamic-confirm *ngIf="confirmOpen && selectedAttachmentIndex === i" [ngStyle]="confirmPosition"
+                            (cancel)="closeDynamicConfirm()" (delete)="removeFile($event)"
+                            [class.confirm-left]="confirmChangePosition" aiClickOutside (clickedOutside)="closeDynamicConfirm()"></ai-dynamic-confirm>
+      </div>
+      <label for="upload-files" class="mb-0" [class.button--disabled]="task?.readOnly || taskReadonly">
+        <div class="attachments__upload-button">
+          <span class="attachments__icon-plus icon icon--plus"></span>
+        </div>
+      </label>
+      <input  id="upload-files" style="display:none;" type="file" ng2FileSelect
+              accept=".jpg, .jp2, .j2k, .jpf, .jpm, .jpg2, .j2c, .jpc, .jfif, .jpe, .png, .doc, .docx, .webp, .pdf, .xls, .xlsx, .ppt .txt, .mov, .mp4, .mkv, .gif, .svg"
+              multiple [uploader]="driveUploader?.uploader" [disabled]="task?.readOnly || taskReadonly" />
+    </div>
+  </div>
+</div>
+
+<ai-drive-uploader #driveUploader (success)="onSuccessUpload($event)"
+                   (afterAddingFile)="fileAdded($event, driveUploader)"
+                   [oganizationId]="organizationId"
+                   [service]="currentServiceKey"
+                   [serviceFolder]="serviceFolder">
+</ai-drive-uploader>
+
+<ng-template #viewer>
+  <ai-file-viewer *ngIf="filesReceived" [files]="files" (onCloseViewer)="onCloseViewer()"></ai-file-viewer>
+</ng-template>

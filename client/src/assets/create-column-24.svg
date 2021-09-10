@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="17px" viewBox="0 0 14 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 60 (88103) - https://sketch.com -->
+    <title>create-column-24</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M18,15 L18,17 L20,17 L20,19 L18,19 L18,21 L16,21 L16,19 L14,19 L14,17 L16,17 L16,15 L18,15 Z M17,4 C17.5522847,4 18,4.44771525 18,5 L18,13 L16,13 L16,6 L8,6 L8,17 L12,17 L12,19 L7,19 C6.44771525,19 6,18.5522847 6,18 L6,5 C6,4.44771525 6.44771525,4 7,4 L17,4 Z" id="path-1"></path>
+    </defs>
+    <g id="01-Desktop" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon-/-24-cont-/-actions-/-create-column-24" transform="translate(-6.000000, -4.000000)">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <path stroke="#7E7E7E" stroke-width="2" d="M19,18 L20,18 L19,17 L19,19 L20,18 L19,18 Z M17,20 L17,21 L18,20 L16,20 L17,21 L17,20 Z M15,18 L14,18 L15,19 L15,17 L14,18 L15,18 Z M17,16 L17,15 L16,16 L18,16 L17,15 L17,16 Z M17,9.5 L17,13 L18,12 L16,12 L17,13 L17,9.5 Z M10,18 L12,18 L11,17 L11,19 L12,18 L10,18 Z"></path>
+            <g id="Colors-/-Dark-Theme-/-Grayscale-/-Filled-/-$base-gray" mask="url(#mask-2)" fill="#7E7E7E" fill-rule="evenodd">
+                <rect id="Dark-Theme-/-Grayscale-/-Filled-/-$base-gray" x="0" y="0" width="24" height="24"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

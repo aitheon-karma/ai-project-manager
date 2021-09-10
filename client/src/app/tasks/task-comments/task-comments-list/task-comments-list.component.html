@@ -1,0 +1,253 @@
+<div class="row m-0 list-width">
+  <div class="comment-list-container w-100"
+       #commentsListView>
+    <div class="comment"
+         *ngFor="let comment of comments">
+      <div class="row flex-nowrap m-0"
+           *ngIf="!editingComment || (editingComment._id !== comment._id); else editCommentView">
+        <div class="px-0 avatar-container mr--16">
+          <ngx-avatar class="my-avatar"
+                      name="{{comment?.createdBy?.profile?.firstName}} {{comment?.createdBy?.profile?.lastName}}"
+                      size="32"
+                      [src]="(comment?.createdBy?.profile?.avatarUrl) ? (comment?.createdBy?.profile?.avatarUrl) : 'assets/contact.jpg'"
+                      tooltip="{{comment?.createdBy?.profile?.firstName}} {{comment?.createdBy?.profile?.lastName}}"
+                      container="body"
+                      placement="top">
+          </ngx-avatar>
+        </div>
+        <div class="w-100 position-relative"
+             *ngIf="comment?.createdBy?.profile">
+          <div class="d-flex align-items-center mb--8">
+            <p class="m-0 flex-username">
+              {{ comment?.createdBy?.profile?.firstName }} {{ comment?.createdBy?.profile?.lastName }}
+            </p>
+            <div class="d-flex justify-content-end ml-auto align-items-center flex-time">
+                        <span class="date">
+                        {{ comment.createdAt | date:'d MMM, y, h:mm a' }} {{ comment.createdAt != comment.updatedAt ? '(edited)' : '' }}
+                        </span>
+              <div class="d-flex align-items-center">
+                <button class="icon icon--reply icon--size-16px icon--dynamic ml--8"
+                        type="button"
+                        (click)="onReplyComment(comment._id, $event)"></button>
+                <button class="icon icon--more icon icon--size-16px icon--dynamic ml--8"
+                        type="button"
+                        (click)="actionClick(comment._id, $event)"
+                        [class.icon--active-open]="comment._id === actionCommentId"
+                        *ngIf="(me._id)  == (comment?.createdBy?._id)">
+                </button>
+                <div class="project-open-select text-muted"
+                     *ngIf="comment._id == actionCommentId && comment.createdBy._id === me._id">
+                            <span class="project-open-select-item d-flex justify-content-start"
+                                  (click)='onEdit(comment)'>Edit</span>
+                  <span class="project-open-select-item d-flex justify-content-start"
+                        (click)="deleteComment(comment, $event)">Delete</span>
+                </div>
+                <div class="delete__activity__menu delete__activity__menu--right delete__activity__menu--top"
+                     *ngIf="deleteCommentId === comment._id">
+                  <div (click)="$event.preventDefault();$event.stopPropagation();"
+                       class="activityOverflow">
+                    <div class="h6 m-3">
+                      Delete comment?
+                    </div>
+                    <div>
+                      <p class="m-3"
+                         style="color: rgb(126, 126, 126)">
+                        Are you sure, you want to delete the comment?
+                      </p>
+                    </div>
+                  </div>
+                  <hr class="line">
+                  <div class="d-flex mx-3 my-2">
+                    <button class="button button--ghost button--error button--medium"
+                            type="button"
+                            style="font-size: 12px" (click)="confirmDelete(comment)">
+                      Yes, Delete
+                    </button>
+                    <div class="d-flex ml-auto">
+                      <button class="button button--contained button--medium"
+                              type="button"
+                              style="height: 36px"
+                              (click)="cancelDelete()">
+                        cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span class="mb--8 text-justify pre-format"
+                [innerHTML]="comment.text | safeHTML"></span>
+        </div>
+      </div>
+      <ng-template #editCommentView>
+        <ai-task-comments-form [editingComment]="editingComment"></ai-task-comments-form>
+      </ng-template>
+
+      <div class="attachments ml-5"
+           *ngIf="!editingComment || (editingComment._id !== comment._id) && !comment.attachments.length">
+        <div class="attachments__drop-image-container"
+             *ngFor="let file of comment.attachments; let i = index"
+             tooltip="{{file.name}}"
+             container="body"
+             placement="auto"
+             (click)="onPreviewFileOpen(file, comment.attachments)">
+          <div class="attachments__item-background"></div>
+          <img *ngIf="isFileImage(file)"
+               src="{{ file._id?.thumbnail ? 'data:image/png;base64,' + file._id?.thumbnail : file.signedUrl }}"
+               class="attachments__uploaded-file">
+          <div *ngIf="!isFileImage(file) && !file.contentType.includes('video')"
+               class="icon-wrapper attachments__uploaded-file">
+            <i class="fa fa-file-o document-icon"></i>
+            <span class="file-extension">{{ file.name.split('.').pop() }}</span>
+          </div>
+          <div *ngIf="file.contentType.includes('video')"
+               class="attachments__uploaded-file attachments__uploaded-file--video">
+            <video src="{{ file.signedUrl }}"></video>
+            <span class="attachments__play-icon icon icon--play icon--active-open icon--gold"></span>
+          </div>
+          <div *ngIf="file.contentType.includes('video')"
+               class="uploaded-file">
+            <video src="{{ file.signedUrl }}"></video>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reply -->
+      <div class="reply-comments" *ngIf="comment?.replyComments?.length">
+        <div class="reply-comments__header"
+             (click)="comment.isReplyCommentsOpen = !comment.isReplyCommentsOpen">
+          {{ comment?.replyComments?.length }} {{ comment?.replyComments?.length > 1 ? 'Replies' : 'Reply' }}
+          <span class="icon icon--size-24px ml--4"
+                [ngClass]="comment.isReplyCommentsOpen ? 'icon--chevron-up' : 'icon--chevron-down'"></span>
+        </div>
+        <div class="reply-comments__list" *ngIf="comment.isReplyCommentsOpen">
+          <div class="row mx-0 mt--8" *ngFor="let replyComment of comment.replyComments">
+            <div class="row reply-comments__comment flex-nowrap mx-0"
+                 *ngIf="!editingComment || (editingComment._id !== replyComment._id); else editCommentView">
+              <div class="col-1 px-0">
+                <ngx-avatar class="my-avatar"
+                            name="{{replyComment?.createdBy?.profile?.firstName}} {{replyComment?.createdBy?.profile?.lastName}}"
+                            size="32"
+                            [src]="(replyComment?.createdBy?.profile?.avatarUrl) ? (replyComment?.createdBy?.profile?.avatarUrl) : 'assets/contact.jpg'"
+                            tooltip="{{comment?.createdBy?.profile?.firstName}} {{comment?.createdBy?.profile?.lastName}}"
+                            container="body"
+                            placement="top">
+                </ngx-avatar>
+              </div>
+              <div class="w-100 position-relative"
+                   *ngIf="replyComment?.createdBy?.profile">
+                <div class="d-flex align-items-center mb--8">
+                  <p class="m-0 flex-username">
+                    {{ replyComment?.createdBy?.profile?.firstName }} {{ replyComment?.createdBy?.profile?.lastName }}
+                  </p>
+                  <div class="d-flex justify-content-end ml-auto align-items-center flex-time">
+              <span class="date">
+                {{ replyComment.createdAt | date:'d MMM' }} {{ replyComment.createdAt != replyComment.updatedAt ? '(edited)' : '' }}
+              </span>
+                    <div>
+                      <div class="d-flex align-items-center">
+                        <button class="icon icon--more icon--size-16px icon--dynamic ml--8"
+                                type="button"
+                                (click)="actionClick(replyComment._id, $event)"
+                                [class.icon--active-open]="replyComment._id === actionCommentId"
+                                *ngIf="(me._id)  == (replyComment?.createdBy?._id)">
+                        </button>
+                        <div class="project-open-select text-muted"
+                             *ngIf="replyComment._id == actionCommentId && replyComment.createdBy._id === me._id">
+                    <span class="project-open-select-item d-flex justify-content-start"
+                          (click)='onEdit(replyComment)'>Edit</span>
+                          <span class="project-open-select-item d-flex justify-content-start"
+                                (click)="deleteComment(replyComment, $event)">Delete</span>
+                        </div>
+                        <div
+                          class="delete__activity__menu delete__activity__menu--right delete__activity__menu--top delete__activity__menu--left"
+                          *ngIf="deleteCommentId === replyComment._id">
+                          <div (click)="$event.preventDefault();$event.stopPropagation();"
+                               class="activityOverflow">
+                            <div class="h6 m-3">
+                              Delete comment?
+                            </div>
+                            <div>
+                              <p class="m-3"
+                                 style="color: rgb(126, 126, 126)">
+                                Are you sure, you want to delete the comment?
+                              </p>
+                            </div>
+                          </div>
+                          <hr class="line">
+                          <div class="d-flex mx-3 my-2 py-1">
+                            <button class="btn button--ghost button--error button--medium"
+                                    type="button"
+                                    style="font-size: 12px"
+                                    (click)="confirmDelete(replyComment)">
+                              Yes, Delete
+                            </button>
+                            <div class="d-flex ml-auto">
+                              <button class="button button--contained button--medium"
+                                      style="height: 36px"
+                                      type="button"
+                                      (click)="cancelDelete()">
+                                cancel
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <span class="mb--8 text-justify pre-format"
+                      [innerHTML]="replyComment.text | safeHTML"></span>
+              </div>
+            </div>
+            <div class="attachments attachments--reply ml-5"
+                 *ngIf="!editingComment || (editingComment._id !== replyComment._id)">
+              <div class="attachments__drop-image-container"
+                   *ngFor="let file of replyComment.attachments; let i = index"
+                   tooltip="{{file.name}}"
+                   container="body"
+                   placement="auto"
+                   (click)="onPreviewFileOpen(file, replyComment.attachments)">
+                <div class="attachments__item-background"></div>
+                <img *ngIf="isFileImage(file)"
+                     src="{{ file._id?.thumbnail ? 'data:image/png;base64,' + file._id?.thumbnail : file.signedUrl }}"
+                     class="attachments__uploaded-file">
+                <div *ngIf="!isFileImage(file) && !file.contentType.includes('video')"
+                     class="icon-wrapper attachments__uploaded-file">
+                  <i class="fa fa-file-o document-icon"></i>
+                  <span class="file-extension">{{ file.name.split('.').pop() }}</span>
+                </div>
+                <div *ngIf="file.contentType.includes('video')"
+                     class="attachments__uploaded-file attachments__uploaded-file--video">
+                  <video src="{{ file.signedUrl }}"></video>
+                  <span class="attachments__play-icon icon icon--play icon--active-open icon--gold"></span>
+                </div>
+                <div *ngIf="file.contentType.includes('video')"
+                     class="uploaded-file">
+                  <video src="{{ file.signedUrl }}"></video>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /Reply -->
+
+    </div>
+    <div class="row"
+         *ngIf="loading">
+      <ai-loading class="margin-l"></ai-loading>
+    </div>
+  </div>
+</div>
+<div class="comments"
+     *ngIf="!comments || !comments.length">
+      <span class="no-comments">
+        No comments for this task yet
+      </span>
+</div>
+
+<ng-template #viewer>
+  <ai-file-viewer *ngIf="filesReceived" [files]="filesForViewer" (onCloseViewer)="onCloseViewer()"></ai-file-viewer>
+</ng-template>

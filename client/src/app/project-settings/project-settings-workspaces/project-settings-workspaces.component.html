@@ -1,0 +1,44 @@
+<div class="row justify-content-start mx-0">
+  <div class="col-9">
+    <h2 class="settings-title">
+      Workspaces
+    </h2>
+    <div class="settings-info">
+      Choose project tools that you would like to use
+    </div>
+    <hr class="settings-line">
+    <form [formGroup]="workspaceForm" *ngIf="!loadingProject; else loader;">
+      <div formArrayName="workspace">
+        <div class="row mx-0 workspace__checkboxTab {{ control.value.class }}"
+          [ngStyle]="{'background':control.value.style}" [class.border]="!control.value.check"
+          *ngFor="let control of workspace.controls;let i = index;" [formGroupName]="i" (click)="onWorkspaceClick(control)">
+          <div class="col-11 pl-0">
+            <div class="workspace__title mb--8 mt--8">
+              <small [ngClass]="{'text-muted': control.value.value !== 'KANBAN'}">{{control.value.value !== 'KANBAN' ? control.value.title + ' (Coming soon...)':control.value.title}}</small>
+            </div>
+            <div class="workspace__description">
+              {{control.value.description}}
+            </div>
+          </div>
+          <div class="col-1 pr-0 d-flex justify-content-end align-items-start">
+            <div class="checkbox">
+              <input class="checkbox__input" type="checkbox" [id]="i" (click)="$event.preventDefault(); $event.stopPropagation();" formControlName="check">
+              <label class="checkbox__label"></label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr class="settings-line">
+      <div class="d-flex justify-content-end">
+        <button class="button button--medium button--contained" [disabled]="isButtonDisabled" (click)="updateProjectWorkspace()">Save
+          changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<ng-template #loader>
+  <div class="text-center">
+    <ai-loading></ai-loading>
+  </div>
+</ng-template>

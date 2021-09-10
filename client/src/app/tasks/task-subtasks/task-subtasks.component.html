@@ -1,0 +1,73 @@
+<div class="subtask-header mb-1">
+  <hr class="subtask-header__hr">
+  <span class="subtask-header__title">Subtasks</span>
+</div>
+
+
+<div class="subtask-list mb-3" *ngIf="subTaskList?.length > 0">
+  <div class="subtask-item" *ngFor="let subtask of subTaskList" (click)="changeTask(subtask)" [class.item-disabled]="taskReadonly">
+      <div class="stage-color" [ngStyle]="{'background-color': subtask?.stage?.color}"></div>
+      <div class="subtask-type mr--16">
+        <span class="icon icon--size-16px icon--white" [ngClass]="getIconClass(subtask)"></span>
+      </div>
+      <span class="mr--16">
+        {{subtask?.reference}}
+      </span>
+      <span class="subtask-item__name" title="{{subtask?.orchestratorTask.name}}">
+        {{subtask?.orchestratorTask.name}}
+      </span>
+      <div class="subtask-item__comments" *ngIf="subtask?.commentsCount">
+        <span class="icon icon--comment icon--size-16px mr--8"></span> {{ subtask?.commentsCount }}
+      </div>
+      <div class="subtask-item__avatar" *ngIf="subtask?.orchestratorTask?.assigned[0]">
+        <ngx-avatar name="{{subtask?.orchestratorTask?.assigned[0]?.profile?.firstName}} {{subtask?.orchestratorTask?.assigned[0]?.profile?.lastName}}"
+                    size="24px"
+                    value="{{subtask?.orchestratorTask?.assigned[0]?.profile?.firstName}} {{subtask?.orchestratorTask?.assigned[0]?.profile?.lastName}}"
+                    [src]="subtask?.orchestratorTask?.assigned[0]?.profile?.avatarUrl">
+        </ngx-avatar>
+      </div>
+  </div>
+</div>
+
+<button type="button"
+        (click)="addSubTask()"
+        class="button button--medium button--ghost"
+        *ngIf="!createMode"
+        [disabled]="taskReadonly">
+  Add Subtask
+</button>
+
+<div class="subtask-form mt-1" *ngIf="createMode">
+  <form *ngIf="!loadingForm; else loadingView" [formGroup]="subTaskForm" (ngSubmit)="onSubmit()" >
+    <div class="row mx-0">
+      <div class="col-8 p-0">
+        <div class="input-wrap input-wrap--small input-wrap--contained">
+          <input class="input-wrap__input" type="text" autocomplete="off" formControlName="name" placeholder="Subtask Name" #name autofocus>
+          <small *ngIf="subTaskForm.get('name').invalid && submitted" class="text-danger"> Subtask name is required</small>
+        </div>
+      </div>
+      <div class="col-4 pr-0">
+        <ng-select  class="dropdown dropdown-stages dropdown--contained"
+                    [multiple]="false"
+                    bindLabel="name"
+                    bindValue="_id"
+                    formControlName="stage"
+                    [clearable]="false"
+                    [items]="board.stages"
+                    placeholder="Column"
+                    [searchable]="false"
+                    dropdownPosition="top">
+        </ng-select>
+        <small *ngIf="subTaskForm.get('stage').invalid && submitted" class="text-danger mt-2"> Please select column</small>
+      </div>
+    </div>
+    <div class="d-flex justify-content-start mt-3">
+      <button type="submit" class="button button--medium button--contained mr--8"> {{ 'Create' }}</button>
+      <button type="button" (click) ="cancel()" class="button button--medium button--ghost">Cancel</button>
+    </div>
+  </form>
+</div>
+
+<ng-template #loadingView>
+  <ai-loading></ai-loading>
+</ng-template>

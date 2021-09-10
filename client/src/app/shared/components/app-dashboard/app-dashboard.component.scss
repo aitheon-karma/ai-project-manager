@@ -1,0 +1,152 @@
+.applications-dashboard {
+  padding: 72px 0 0 0 !important;
+
+  &--pt-24 {
+    padding-top: 24px !important;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  &__edit {
+    height: 36px;
+  }
+
+  &__main-container {
+    min-height: fit-content;
+    max-height: calc(100vh - 214px);
+    margin-top: 16px;
+  }
+
+  &__create-dashboard-app-wrap {
+    padding: 24px;
+    background: #2b2b2b;
+    border-radius: 2px;
+  }
+
+  &__create-dashboard-app {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    padding: 16px;
+    color: #dcbc65;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 24px;
+    border: 1px dashed #dcbc65;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: .1s ease-in-out;
+
+    &:hover {
+      background: #383838;
+      transition: .1s ease-in-out;
+    }
+  }
+
+  &__loader {
+    display: flex;
+    height: 265px;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+  }
+}
+
+.apps-dropdown {
+  &__selected-app {
+    user-select: none;
+    cursor: pointer;
+    color: #fff;
+    position: relative;
+    font-size: 24px;
+    letter-spacing: 0;
+    line-height: 32px;
+    display: flex;
+    align-items: center;
+
+    & > .icon {
+      margin-left: 16px;
+    }
+  }
+}
+
+.applications-list {
+  position: absolute;
+  left: 0;
+  top: 40px;
+  padding: 8px 0;
+  z-index: 100;
+  background: #2b2b2b;
+  border-radius: 2px;
+  overflow-y: auto;
+  transition: .2s ease-in-out;
+  box-shadow: 1px 1px 5px 0 rgba(26,26,26,1);
+  cursor: default;
+  width: 100%;
+  min-width: 240px;
+  max-height: 240px;
+
+  &--closed {
+    height: 0;
+    max-height: 0;
+    padding: 0;
+    box-shadow: unset;
+    overflow-y: hidden;
+  }
+
+  &--opened {
+    height: auto;
+    max-height: unset;
+  }
+
+  &__item {
+    padding: 8px 16px;
+    color: var(--white);
+    font-size: 14px;
+    font-weight: normal;
+    letter-spacing: 0.2px;
+    line-height: 20px;
+    transition: .2s ease-in-out;
+    align-items: center;
+    display: flex;
+    cursor: pointer;
+
+    &--create-dashboard {
+      color: #dcbc65;
+      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    &:hover {
+      background: #303030;
+    }
+
+    span.icon {
+      margin-right: 8px;
+      margin-top: -2px;
+    }
+  }
+}
+
+.icon {
+  transition: .2s ease-in-out !important;
+  &--rotate-180 {
+    transform: rotate(180deg);
+  }
+}
+
+// Fast fix for core button icon
+.service-icon.system_graph:before {
+  background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='72px' height='72px' viewBox='0 0 72 72' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3C!-- Generator: Sketch 64 (93537) - https://sketch.com --%3E%3Ctitle%3Elogo%3C/title%3E%3Cdesc%3ECreated with Sketch.%3C/desc%3E%3Cdefs%3E%3ClinearGradient x1='1.44424438%25' y1='0%25' x2='100%25' y2='100%25' id='linearGradient-1'%3E%3Cstop stop-color='%232575FC' offset='0%25'%3E%3C/stop%3E%3Cstop stop-color='%236A11CB' offset='100%25'%3E%3C/stop%3E%3C/linearGradient%3E%3ClinearGradient x1='1.44424438%25' y1='0%25' x2='100%25' y2='100%25' id='linearGradient-2'%3E%3Cstop stop-color='%238F4ED6' offset='0%25'%3E%3C/stop%3E%3Cstop stop-color='%235F94ED' offset='100%25'%3E%3C/stop%3E%3C/linearGradient%3E%3C/defs%3E%3Cg id='--' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E%3Cg id='01-Desktop-/-09-Services-/-03_Graph-1440---V1' transform='translate(-684.000000, -307.000000)'%3E%3Cg id='Group-43' transform='translate(495.000000, 307.000000)'%3E%3Cg id='logo' transform='translate(189.000000, 0.000000)'%3E%3Cpath d='M12,0 L60,0 C66.627417,-1.21743675e-15 72,5.372583 72,12 L72,60 C72,66.627417 66.627417,72 60,72 L12,72 C5.372583,72 -2.74108918e-15,66.627417 0,60 L0,12 C-8.11624501e-16,5.372583 5.372583,-2.33527693e-15 12,0 Z' id='Rectangle-6-Copy-73' fill='url(%23linearGradient-1)'%3E%3C/path%3E%3Cpath d='M31.199,22.8 L31.2,36 C31.2,37.9882251 32.8117749,39.6 34.8,39.6 L34.8,39.6 L50.4,39.599 L50.4,57.6 C50.4,59.5882251 48.7882251,61.2 46.8,61.2 L15.6,61.2 C13.6117749,61.2 12,59.5882251 12,57.6 L12,26.4 C12,24.4117749 13.6117749,22.8 15.6,22.8 L31.199,22.8 Z' id='Combined-Shape-Copy-4' fill='%23FFFFFF'%3E%3C/path%3E%3Crect id='Rectangle-Copy-78' fill='url(%23linearGradient-2)' x='38.4' y='10.8' width='20.4' height='20.4' rx='3.6'%3E%3C/rect%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}

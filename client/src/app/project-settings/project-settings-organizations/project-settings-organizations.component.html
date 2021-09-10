@@ -1,0 +1,68 @@
+<div class="row justify-content-start mx-0">
+  <div class="col-9">
+    <div class="d-flex justify-content-between align-items-start">
+      <div>
+        <h2 class="settings-title mb--4">Organizations</h2>
+        <div class="settings-info">
+          Organizations that were invited to this project
+        </div>
+      </div>
+      <button (click)="openDialog(inviteOrgModal)" class="button button--medium button--contained">
+        <span class="button__icon icon icon--size-16px icon--new-user"></span>
+        Invite Organizations
+      </button>
+    </div>
+    <hr class="settings-line mt--24 mb--24">
+    <div *ngIf="!loadingProjectInvite else loader">
+      <div *ngIf="projectInvites.length > 0 else noOrganizations">
+        <div class="organization-item mb--4" *ngFor="let projectInvite of projectInvites,index as i">
+          <div class="mr--24">
+            <img class="organization-item__avatar" *ngIf="projectInvite?.organization?.profile?.avatarUrl"
+              [src]="projectInvite?.organization?.profile?.avatarUrl">
+            <img class="organization-item__avatar" *ngIf="!projectInvite?.organization?.profile?.avatarUrl"
+              src="assets/empty.svg" alt="">
+          </div>
+          <div class="organization-item__name-email mr-auto">
+            <div class="name">
+              {{projectInvite?.organization?.name}}
+            </div>
+            <div class="email">
+              {{projectInvite?.organization?.registeredOfficeDetails?.emails[0]?.email}}
+            </div>
+          </div>
+          <div class="organization-item__role">{{projectInvite?.status}}</div>
+          <button (click)="removeProjectInvite(projectInvite)" class="button button--ghost button--medium ml--24">
+            Remove
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #noOrganizations>
+  <div class="no-organizations">
+    No shared organizations in this project.
+  </div>
+</ng-template>
+
+
+<ng-template #loader>
+  <div class="loader">
+    <ai-loading></ai-loading>
+  </div>
+</ng-template>
+
+<ai-generic-confirm #genericConfirm></ai-generic-confirm>
+
+<ng-template #inviteOrgModal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Invite Organization</h4>
+    <button type="button" class="icon icon--close pull-right" aria-label="Close" (click)="onCloseDialog(false)">
+    </button>
+  </div>
+  <div class="modal-body">
+    <ai-invite-form [entity]="service" (onInvited)="onInvited()" (onCancel)="onCloseDialog($event)" class="no-border">
+    </ai-invite-form>
+  </div>
+</ng-template>

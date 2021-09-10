@@ -1,0 +1,19 @@
+.comments {
+
+  &__section {
+    margin: 0;
+  }
+
+  &__hr {
+    margin-bottom: 8px;
+    border-top: 1px solid #454545;
+  }
+
+  &__title {
+    font-size: 10px;
+    line-height: 10px;
+    letter-spacing: 1px;
+    color: #7e7e7e;
+    text-transform: uppercase;
+  }
+}

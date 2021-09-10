@@ -1,0 +1,28 @@
+<main class="container mt--64">
+  <div class="row pt--8">
+    <div class="col-3 sub-menu mr-0">
+      <span class="sub-menu__item" routerLinkActive="sub-menu__item--active" [routerLink]="['details']">
+        Details
+      </span>
+      <span class="sub-menu__item" routerLinkActive="sub-menu__item--active" [routerLink]="['members']">
+        Members
+      </span>
+      <span *ngIf="isProjectOwner" class="sub-menu__item" routerLinkActive="sub-menu__item--active" [routerLink]="['access']">
+        Access
+      </span>
+      <span *ngIf="isProjectOwner" class="sub-menu__item" routerLinkActive="sub-menu__item--active" [routerLink]="['workspaces']">
+        Workspaces
+      </span>
+      <span *ngIf="isProjectOwner" class="sub-menu__item" routerLinkActive="sub-menu__item--active" [routerLink]="['organizations']">
+        Shared Organizations
+      </span>
+    </div>
+    <div class="col-9">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</main>
+
+<ng-template #loadingView>
+  <ai-loading class="text-center d-block mt-3"></ai-loading>
+</ng-template>

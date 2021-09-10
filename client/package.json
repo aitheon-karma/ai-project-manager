@@ -1,0 +1,35 @@
+{
+  "name": "ai-project-manager",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build --aot",
+    "build:prod": "$(npm bin)/ng build --aot --prod --base-href /project-manager/ && npm run docs",
+    "watch": "ng build --watch=true --aot",
+    "test": "ng test",
+    "lint": "ng lint ai-project-manager --fix",
+    "e2e": "ng e2e",
+    "lib:watch": "$(npm bin)/ng build @aitheon/project-manager --watch",
+    "lib:version": "cd projects/aitheon/project-manager && npm version minor",
+    "lib:build": "$(npm bin)/ng build @aitheon/project-manager",
+    "lib:publish": "npm run lib:build && npm publish dist/aitheon/project-manager",
+    "docs": "npm run typedoc -- --options typedoc.json --exclude '**/*.spec.ts' ./projects/",
+    "typedoc": "typedoc"
+  },
+  "private": true,
+  "dependencies": {
+    "@aitheon/core-client": "9.1.54",
+    "@aitheon/creators-studio": "0.32.0",
+    "@aitheon/drive": "^0.9.0",
+    "@aitheon/item-manager": "^0.22.0",
+    "@aitheon/marketplace": "0.19.0",
+    "@aitheon/orchestrator": "0.50.0",
+    "@aitheon/system-graph": "0.113.0",
+    "ngx-avatar": "^3.7.0",
+    "ngx-bootstrap": "5.6.1",
+    "ngx-color-picker": "^10.0.1",
+    "ngx-smooth-dnd": "^0.4.1"
+  },
+  "devDependencies": {}
+}

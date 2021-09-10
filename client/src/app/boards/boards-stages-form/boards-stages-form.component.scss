@@ -1,0 +1,36 @@
+.textFieldBackgroundColor {
+  background: #1e1e1e1e;
+  color: white;
+  &:focus {
+    border: solid 1px #dcbc65 !important;
+    box-shadow: none !important;
+  }
+}
+
+.btnMargin {
+  height: 35px;
+  margin-top: 20px;
+}
+
+.color-picker {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+::ng-deep .color-picker{
+  .type-policy{
+    background: #7e7e7e;
+    border-radius: 2px;
+    border: #454545 solid 1px;
+    margin-top: -1px;
+    span{
+      transition: .3s;
+      cursor: pointer;
+    }
+    span:hover{
+      background: rgba(255,255,255,.1);
+    }
+  }
+}

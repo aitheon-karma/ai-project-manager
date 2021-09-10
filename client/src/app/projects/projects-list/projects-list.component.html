@@ -1,0 +1,403 @@
+<div class="project-dashboard">
+  <div  class='row project-dashboard__head'
+        *ngIf="!noProjects">
+    <h2 class='project-dashboard__title m-0'
+        *ngIf="status == 'PROJECTS'">
+      {{ list.length > 1 ? 'Projects' :  'Project' }} ({{ list.length }})
+    </h2>
+    <h2 class='project-dashboard__title m-0'
+        *ngIf="status == 'ARCHIVED'">
+      {{ list.length > 1 ? 'Archived projects' :  'Archived project' }} ({{ list.length }})
+    </h2>
+    <div class="project-dashboard__head-right" >
+
+      <!--          Priority field is temporarily removed; to be restored -->
+
+
+      <!--      <div class="d-flex align-items-center mr&#45;&#45;24 filter-list">-->
+<!--        <label class="mb&#45;&#45;0 mr&#45;&#45;16 filter-list__title">-->
+<!--          Sort by priority:-->
+<!--        </label>-->
+<!--        <div class="filter-list__select">-->
+<!--          <ng-select class="dropdown dropdown&#45;&#45;contained"-->
+<!--                     [items]="priorityFilterList"-->
+<!--                     [searchable]="false"-->
+<!--                     (change)="filterProjects($event)"-->
+<!--                     placeholder="Select Priority"-->
+<!--                     bindLabel="label"-->
+<!--                     bindValue="priority">-->
+<!--            <ng-template ng-label-tmp let-item="item">-->
+<!--              <div class="ng-value">-->
+<!--                <span class="ng-value-label">-->
+<!--                  <div class="item item&#45;&#45;icon-24">-->
+<!--                    <span></span><span class="fix-gap">{{ item.label }}</span>-->
+<!--                  </div>-->
+<!--                </span>-->
+<!--              </div>-->
+<!--            </ng-template>-->
+<!--          </ng-select>-->
+<!--        </div>-->
+<!--      </div>-->
+      <div class="project-view-types">
+        <div class="project-view-list">
+          <span class="icon icon--list-view icon--dynamic"
+                (click)="changeView('listView')"
+                [class.active]="activeView == 'listView'"></span>
+        </div>
+        <div class="project-view-grid ml-3">
+          <span class="icon icon--grid-view icon--dynamic"
+                (click)="changeView('gridView')"
+                [class.active]="activeView == 'gridView'"></span>
+        </div>
+      </div>
+      <span class="project-dashboard__head-divider" *ngIf="status == 'PROJECTS' && serviceUserRole === 'ServiceAdmin'"></span>
+      <button type="submit"
+              class="button button--contained button--medium"
+              (click)="openCreateDialog()"
+              *ngIf="status == 'PROJECTS' && serviceUserRole === 'ServiceAdmin'">
+        <span class="icon icon--plus icon--size-16px button__icon"></span>
+        Create project
+      </button>
+    </div>
+  </div>
+</div>
+
+<div  class="project-dashboard__list"
+      [class.grid-view]="activeView == 'gridView'"
+      *ngIf="!noProjects && list.length > 0">
+  <div  class="project-dashboard__card project-card card"
+        *ngFor="let project of list; let i = index;">
+    <a  href="/projects/{{project._id}}/project-dashboard/" class="project-card__body card-body"
+          (click)="navigateToProject($event, project)">
+      <div class="project-card__top position-relative">
+        <div class="project-card__avatar" [class.project-card__avatar--grid]="activeView === 'gridView'">
+          <img  src="{{ project.cover }}"
+                alt="Project Image"
+                class="project-card__avatar-img rounded-circle"
+                *ngIf="project.cover">
+          <span class="project-card__avatar-img project-card__avatar--generated rounded-circle"
+                [ngStyle]="{'background-color': getRandomColor(i)}"
+                *ngIf="!project.cover">
+            {{ project.generatedName }}
+          </span>
+        </div>
+
+        <div class="project-card__info-section">
+          <div class="d-flex align-items-center mb--8 mr--24">
+            <div class="project-card__name"
+                 [ngClass]="activeView === 'gridView' ? 'text-crop text-crop--line-1' : ''"
+                 tooltip="{{ project.name }}"
+                 [delay]="500"
+                 container="body">
+              {{ project.name }}
+            </div>
+            <div class="project-card__description mb-0 ml--8" *ngIf="project?.sharedBy && activeView !== 'gridView'" >
+              (shared from {{ project.sharedBy }} Organization)
+            </div>
+            <div class="project-card__type" [ngClass]="setTypeClass(project.type)" *ngIf="activeView !== 'gridView'">
+              {{ project.type | titlecase }}
+            </div>
+          </div>
+          <div class="project-card__description" [ngClass]="activeView === 'gridView' ? 'text-crop text-crop--line-2' : ''">
+            {{ project.description }}
+          </div>
+          <div  class="project-card__members-section"
+                *ngIf="activeView !== 'gridView'">
+            <div class="project-card__members-title">Members:</div>
+            <div class="project-card__members">
+              <ng-container *ngFor="let member of project?.members; let i = index;">
+                  <ng-container *ngIf=" i< 5">
+                      <img  *ngIf="member?.user?.profile?.avatarUrl"
+                            class="project-card__member"
+                            [ngStyle]="{'z-index': (5 - i)}"
+                            src="{{member?.user?.profile?.avatarUrl}}"
+                            tooltip="{{ member.user?.profile?.firstName + ' ' + member.user?.profile?.lastName }}"
+                            container="body">
+                      <span *ngIf="member?.user?.profile?.avatarUrl == '' || !member?.user?.profile?.avatarUrl"
+                            class="project-card__member project-card__member--text"
+                            [ngStyle]="{'background-color': getRandomColor(i),'z-index': (5 - i)}"
+                            tooltip="{{ member.user?.profile?.firstName + ' ' + member.user?.profile?.lastName }}"
+                            container="body">
+                        {{ member?.user?.profile?.firstName ? getInitails(member?.user?.profile?.firstName) : '' }}
+                    </span>
+                  </ng-container>
+              </ng-container>
+              <span *ngIf="project?.members?.length == 0"
+                    class="text-muted"
+                    style="font-size: 12px;">
+                No members
+              </span>
+              <div  *ngIf="project?.members?.length > 5"
+                    class="project-card__members-more"
+                    style="width:auto !important">
+                <span class="project-card__followers-remaining"
+                      tooltip="{{ otherMembers }}"
+                      container="body"
+                      containerClass="bigTooltipWidth">
+                  +{{ (project?.members?.length - 5) }}
+                </span>
+              </div>
+          </div>
+          </div>
+        </div>
+        <div  class="project-card__more-section">
+
+<!--          Priority field is temporarily removed; to be restored -->
+
+<!--          <div class="mr&#45;&#45;24 ml-auto d-flex align-items-center" [class.position-priority]="activeView === 'gridView'">-->
+<!--            <label class="form-label pr&#45;&#45;8 m-0">-->
+<!--              Priority:-->
+<!--            </label>-->
+<!--            <div class="select-priority" [class.item-disabled]="!project.isAdmin">-->
+<!--              <ng-select class="dropdown dropdown&#45;&#45;contained"-->
+<!--                         [items]="priorityList"-->
+<!--                         [searchable]="false"-->
+<!--                         [clearable]="false"-->
+<!--                         [(ngModel)]="project.priority"-->
+<!--                         (click)="prioritySelect($event)"-->
+<!--                         (change)="onPriorityChange(project?._id, project.priority)"-->
+<!--                         [disabled]="!project.isAdmin"-->
+<!--                         bindLabel="label"-->
+<!--                         bindValue="priority">-->
+<!--                <ng-template ng-label-tmp let-item="item">-->
+<!--                  <div class="ng-value">-->
+<!--                  <span class="ng-value-label">-->
+<!--                    <div class="item item&#45;&#45;icon-24">-->
+<!--                      <span></span><span class="fix-gap">{{ item.label }}</span>-->
+<!--                    </div>-->
+<!--                  </span>-->
+<!--                  </div>-->
+<!--                </ng-template>-->
+<!--              </ng-select>-->
+<!--            </div>-->
+<!--          </div>-->
+          <button class="project-card__reorder-icon icon icon--switch icon--dynamic mr-3"
+                  tooltip="Projects reordering"
+                  [delay]="500"
+                  [class.icon--active-open]="i === 1 && showTooltipForReorder"
+                  *ngIf="list?.length > 1 && activeStatus === 'ACTIVE'"
+                  (click)="openProjectOrderModal($event, project._id)"></button>
+          <div class="project-card__reorder-tooltip" *ngIf="i === 1 && showTooltipForReorder">
+            <span class="project-card__reorder-tooltip-text">
+              Now you can change the order of your projects. Just click on the icon to change the order. It will be saved for you only.
+            </span>
+            <button class="button button--ghost button--small ml-auto" (click)="generateOrderInList($event)">Got It</button>
+          </div>
+          <button (click)="onActionClick($event, project._id, project?.moreBtnOpen);"
+                  class="icon icon--dynamic icon--more project-card__more-button"
+                  [class.item-disabled]="!project.isAdmin"
+                  [class.icon--active-open]="project?.moreBtnOpen && selectedId == project._id"
+                  [disabled]="!project.isAdmin">
+          </button>
+          <div class="project-card__more-list" *ngIf="project?.moreBtnOpen && selectedId == project._id">
+            <span class="project-card__more-item"
+                  (click)="goToSettings(project, $event)">
+              Project Settings
+            </span>
+            <span class="project-card__more-item" *ngIf="project.status=='ARCHIVED'"
+                  (click)="openUpdateProjectStatusModal($event, project, 'ACTIVE')">
+              Unarchive Project
+            </span>
+            <span class="project-card__more-item" *ngIf="project.status=='ARCHIVED'"
+                  (click)="openUpdateProjectStatusModal($event, project, 'DELETED')">
+              Delete Project
+            </span>
+            <span *ngIf="project.status=='ACTIVE'"
+                  class="project-card__more-item"
+                  (click)="openUpdateProjectStatusModal($event, project, 'ARCHIVED')">
+              Move to Archive
+            </span>
+            <!-- <hr class="project-card__more-hr"> -->
+          </div>
+        </div>
+      </div>
+      <hr class="project-card__hr"
+          [class.mb--8]="activeView == 'gridView'">
+      <div  class="project-card__bottom">
+        <div  class="project-card__progress-section">
+          <div  class="row mb-2 mx-0 project-card__progress-percentages"
+                [class.mb-0]="activeView == 'gridView' && project?.progress?.totalTasksAndIssue==0">
+            <div  *ngIf="project?.progress?.issueCount?.percentage > 0"
+                  [ngStyle]="getProgressTextStyle(project,'TODO_ISSUE')"
+                  class="project-card__percentage">
+              {{ (+project?.progress?.issueCount?.percentage).toFixed(0) }}%
+            </div>
+            <div  *ngIf="project?.progress?.totalTasksAndIssue==0"
+                  [ngStyle]="getProgressTextStyle(project,'TODO_ISSUE')"
+                  class="project-card__percentage">
+              No tasks
+            </div>
+            <div  *ngIf="project?.progress?.todoTaskCount?.percentage > 0"
+                  [ngStyle]="getProgressTextStyle(project,'TODO_TASK')"
+                  class="project-card__percentage">
+              {{ (+project?.progress?.todoTaskCount?.percentage).toFixed(0) }}%
+            </div>
+            <div  *ngIf="project?.progress?.totalTasksAndIssue==0"
+                  [ngStyle]="getProgressTextStyle(project,'TODO_TASK')"
+                  class="project-card__percentage">
+              No tasks
+            </div>
+            <div  *ngIf="project?.progress?.inProgressCount?.percentage > 0"
+                  [ngStyle]="getProgressTextStyle(project,'INPROGRESS')"
+                  class="project-card__percentage">
+              {{ (+project?.progress?.inProgressCount?.percentage).toFixed(0) }}%
+            </div>
+            <div  *ngIf="project?.progress?.totalTasksAndIssue==0"
+                  [ngStyle]="getProgressTextStyle(project,'INPROGRESS')"
+                  class="project-card__percentage">
+              No tasks
+            </div>
+            <div  *ngIf="project?.progress?.doneCount?.percentage > 0"
+                  [ngStyle]="getProgressTextStyle(project,'DONE')"
+                  class="project-card__percentage">
+              {{ (+project?.progress?.doneCount?.percentage).toFixed(0) }}%
+            </div>
+            <div  *ngIf="project?.progress?.totalTasksAndIssue==0"
+                  [ngStyle]="getProgressTextStyle(project,'DONE')"
+                  class="project-card__percentage">
+              No tasks
+            </div>
+          </div>
+          <div  class="row mx-0 project-card__progress-line-section">
+            <div  class="project-card__progress-line-container">
+              <div  class="project-card__progress-line"
+                    *ngIf="project?.progress?.totalTasksAndIssue>0">
+                <div  class="project-card__progress-line-state"
+                      [ngStyle]="getStyle(project,'TODO_ISSUE')"
+                      [class.isLastVisible]="isNextItemsHidden(project, 'TODO_ISSUE')"
+                      [tooltip]="getTooltipInfo(project, 'TODO_ISSUE')"
+                ></div>
+                <div  class="project-card__progress-line-state"
+                      [ngStyle]="getStyle(project,'TODO_TASK')"
+                      [ngClass]="{'isFirstVisible': isTodoIssueHidden(project), 'isLastVisible': isNextItemsHidden(project, 'TODO_TASK')}"
+                      [tooltip]="getTooltipInfo(project, 'TODO_TASK')"
+                ></div>
+                <div  class="project-card__progress-line-state"
+                      [ngStyle]="getStyle(project,'INPROGRESS')"
+                      [class.isLastVisible]="isNextItemsHidden(project, 'INPROGRESS')"
+                      [tooltip]="getTooltipInfo(project, 'INPROGRESS')"
+                ></div>
+                <div  class="project-card__progress-line-state"
+                      [ngStyle]="getStyle(project,'DONE')"
+                      [tooltip]="getTooltipInfo(project, 'DONE')"
+                ></div>
+              </div>
+              <div class="project-card__progress-line"
+                    *ngIf="project?.progress?.totalTasksAndIssue==0">
+                <div  class="project-card__progress-line-state"
+                      style="width: 25%; background: #E95F58"></div>
+                <div  class="project-card__progress-line-state"
+                      style="width: 25%; background: #7E7E7E"></div>
+                <div  class="project-card__progress-line-state"
+                      style="width: 25%; background: #589BE9"></div>
+                <div  class="project-card__progress-line-state"
+                      style="width: 25%; background: #67B231"></div>
+              </div>
+            </div>
+          </div>
+          <div  class="row mx-0 mt-2"
+                [class.pb-4]="activeView == 'gridView'"
+                *ngIf="activeView !== 'gridView'">
+            <div  class="row mb-2 mx-0 project-card__progress-states">
+
+              <div  [ngStyle]="getProgressTextStyle(project,'TODO_ISSUE')"
+                    [class.hidden]="isProgressStateHidden(todoIssueTaskState)"
+                    class="project-card__task-state"
+                    #todoIssueTaskState>
+                <div *ngIf="project?.progress?.issueCount?.percentage>0 || project?.progress?.totalTasksAndIssue==0">
+                  <span>Issues </span>
+                  <div  class="d-inline"
+                        *ngIf="project?.progress?.totalTasksAndIssue>0">
+                    {{ (project?.progress?.issueCount?.percentage/100*project?.progress?.totalTasksAndIssue).toFixed(0) }}
+                  </div>
+                </div>
+              </div>
+
+              <div  [ngStyle]="getProgressTextStyle(project,'TODO_TASK')"
+                    [class.hidden]="isProgressStateHidden(todoTaskState)"
+                    class="project-card__task-state"
+                    #todoTaskState>
+                <div *ngIf="project?.progress?.todoTaskCount?.percentage>0 || project?.progress?.totalTasksAndIssue==0">
+                  <span>To Do </span>
+                  <div  class="d-inline"
+                        *ngIf="project?.progress?.totalTasksAndIssue>0">
+                    {{ (project?.progress?.todoTaskCount?.percentage/100*project?.progress?.totalTasksAndIssue).toFixed(0) }}
+                  </div>
+                </div>
+              </div>
+
+              <div  [ngStyle]="getProgressTextStyle(project,'INPROGRESS')"
+                    [class.hidden]="isProgressStateHidden(inProgressState)"
+                    class="project-card__task-state"
+                    #inProgressState>
+                <div *ngIf="project?.progress?.inProgressCount?.percentage>0 || project?.progress?.totalTasksAndIssue==0">
+                  <span>In Progress </span>
+                  <div  class="d-inline"
+                        *ngIf="project?.progress?.totalTasksAndIssue>0">
+                    {{ (project?.progress?.inProgressCount?.percentage/100*project?.progress?.totalTasksAndIssue).toFixed(0) }}
+                  </div>
+                </div>
+              </div>
+
+              <div  [ngStyle]="getProgressTextStyle(project,'DONE')"
+                    [class.hidden]="isProgressStateHidden(doneState)"
+                    class="project-card__task-state" #doneState>
+                <div *ngIf="project?.progress?.doneCount?.percentage>0 || project?.progress?.totalTasksAndIssue==0">
+                  <span>Done</span>
+                  <div  class="d-inline"
+                        *ngIf="project?.progress?.totalTasksAndIssue>0">
+                    {{ (project?.progress?.doneCount?.percentage/100*project.progress.totalTasksAndIssue).toFixed(0) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<div  class="project-dashboard__empty"
+      *ngIf="noProjects">
+  <div class="project-dashboard__empty-img"></div>
+  <div  class="project-dashboard__empty-text"
+        *ngIf="status !== 'ARCHIVED'">No projects in this organization.<br>
+                                      Let's create your first project.</div>
+  <div  class="project-dashboard__empty-text"
+        *ngIf="status == 'ARCHIVED'">No project in Archive yet</div>
+  <button type="submit"
+          class="button button--contained button--medium"
+          (click)="openCreateDialog()"
+          *ngIf="status !== 'ARCHIVED' && serviceUserRole === 'ServiceAdmin'">
+    <span class="icon icon--plus icon--size-16px button__icon"></span>
+    Create project
+  </button>
+</div>
+
+<ng-template #projectModal>
+  <div class="modal-header">
+      <h4 class="modal-title pull-left">New Project</h4>
+      <button class="icon icon--close icon--dynamic" aria-label="Close" (click)="onCloseDialog()"></button>
+  </div>
+  <div class="modal-body pl--24 pr--24 pb--12">
+      <ai-projects-form class="no-border"
+                        [project]="project"
+                        [modalRef]="projectModalRef"
+                        (onSaved)="onSaved($event)"
+                        (onCancel)="onCloseDialog()">
+      </ai-projects-form>
+  </div>
+</ng-template>
+
+<div  class="loading-container"
+      *ngIf="loading">
+  <ai-loading></ai-loading>
+</div>
+
+<ai-generic-confirm #genericConfirm></ai-generic-confirm>
+
+<ng-template #projectOrderModal>
+  <ai-project-order-modal [projects]="list" [activeProject]="activeProject"
+                          (close)="closeOrderModal()" (orderedProjects)="reorderProjects()"></ai-project-order-modal>
+</ng-template>

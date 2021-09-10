@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="274px" height="96px" viewBox="0 0 274 96" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 11</title>
+    <defs>
+        <linearGradient x1="97.7621641%" y1="49.5715118%" x2="1.04139615%" y2="52.6433832%" id="linearGradient-1">
+            <stop stop-color="#DCBC65" stop-opacity="0" offset="0%"></stop>
+            <stop stop-color="#DCBC65" offset="45.2861064%"></stop>
+            <stop stop-color="#DCBC65" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Core" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="29-Blueprints-/-01_04_Breadcrumbs" transform="translate(-290.000000, -548.000000)">
+            <g id="graphic-widget" transform="translate(290.000000, 548.000000)">
+                <g id="Group-11" transform="translate(0.836134, 0.000000)">
+                    <rect id="Elements-/-Containers-/-radius-all" fill="#383838" fill-rule="nonzero" x="0.163866" y="0" width="272" height="96" rx="2"></rect>
+                    <rect id="Dark-Theme-/-Grayscale-/-Filled-/-$tundora-gray" fill="#454545" fill-rule="nonzero" x="0.163866" y="19.361345" width="272" height="1"></rect>
+                    <rect id="Dark-Theme-/-Grayscale-/-Filled-/-$tundora-gray" fill="#454545" fill-rule="nonzero" x="0.163866" y="37.915966" width="272" height="1"></rect>
+                    <rect id="Dark-Theme-/-Grayscale-/-Filled-/-$tundora-gray" fill="#454545" fill-rule="nonzero" x="0.163866" y="57.277311" width="272" height="1"></rect>
+                    <rect id="Dark-Theme-/-Grayscale-/-Filled-/-$tundora-gray" fill="#454545" fill-rule="nonzero" x="0.163866" y="76.638655" width="272" height="1"></rect>
+                    <rect id="Dark-Theme-/-Grayscale-/-Filled-/-$tundora-gray" fill="#454545" fill-rule="nonzero" transform="translate(40.000000, 48.000000) rotate(90.000000) translate(-40.000000, -48.000000) " x="-8" y="47.5" width="96" height="1"></rect>
+                    <rect id="Dark-Theme-/-Grayscale-/-Filled-/-$tundora-gray" fill="#454545" fill-rule="nonzero" transform="translate(79.529412, 48.000000) rotate(90.000000) translate(-79.529412, -48.000000) " x="31.529412" y="47.5" width="96" height="1"></rect>
+                    <rect id="Dark-Theme-/-Grayscale-/-Filled-/-$tundora-gray" fill="#454545" fill-rule="nonzero" transform="translate(119.058824, 48.000000) rotate(90.000000) translate(-119.058824, -48.000000) " x="71.058824" y="47.5" width="96" height="1"></rect>
+                    <rect id="Dark-Theme-/-Grayscale-/-Filled-/-$tundora-gray" fill="#454545" fill-rule="nonzero" transform="translate(158.588235, 48.000000) rotate(90.000000) translate(-158.588235, -48.000000) " x="110.588235" y="47.5" width="96" height="1"></rect>
+                    <rect id="Dark-Theme-/-Grayscale-/-Filled-/-$tundora-gray" fill="#454545" fill-rule="nonzero" transform="translate(198.117647, 47.596638) rotate(90.000000) translate(-198.117647, -47.596638) " x="150.521008" y="47.0966377" width="95.1932773" height="1"></rect>
+                    <rect id="Dark-Theme-/-Grayscale-/-Filled-/-$tundora-gray" fill="#454545" fill-rule="nonzero" transform="translate(237.663866, 47.596638) rotate(90.000000) translate(-237.663866, -47.596638) " x="190.067227" y="47.0966377" width="95.1932773" height="1"></rect>
+                    <path d="M0.97058858,93.4991404 C3.42907282,91.7475135 5.96959372,89.7102547 8.60787753,87.3766191 C31.8574025,66.8117656 27.0753664,60.4537815 45.2154865,56.3898967 C63.3556066,52.3260119 65.3809773,85.512605 90.8430376,85.512605 C116.305098,85.512605 112.997892,19.3613445 136.009704,19.7647059 C159.021516,20.1680672 152.423308,57.6806723 181.637255,58.0840336 C203.928821,58.3918166 207.446779,76.6386555 226.803922,77.4453782 C246.161065,78.2521008 266.458822,61.5653943 271.970589,57.2773109" id="Path" stroke="url(#linearGradient-1)" stroke-width="1.61344538" stroke-linecap="round" stroke-linejoin="round"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

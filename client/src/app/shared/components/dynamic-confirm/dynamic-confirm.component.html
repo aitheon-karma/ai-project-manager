@@ -1,0 +1,9 @@
+<div class="confirm" (click)="stopEvents($event)">
+	<div class="confirm__text">
+		Are you sure you want to delete the attachment?
+	</div>
+	<div class="confirm__buttons">
+		<button class="button button--ghost button--small" (click)="onCancelDelete($event)">Cancel</button>
+		<button class="button button--ghost button--small button--error ml--4" (click)="onDeleteAttachment($event)">Delete</button>
+	</div>
+</div>

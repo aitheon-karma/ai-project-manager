@@ -1,0 +1,139 @@
+<main class="board">
+    <div #filters>
+        <ai-filters-panel [projectData]="projectData"
+                          [projectStatus]="project?.status"
+                          [projectId]="project?._id"
+                          #filtersPanel
+                          (resetFilters)="getFilterTasks($event)"
+                          (openModal)="openEditStageModal($event)"
+                          (filterData)="getFilterTasks($event)"
+                          (toggleFiltersEvent)="calcFilterHeight()">
+        </ai-filters-panel>
+    </div>
+    <div class="board__content">
+      <ng-container *ngIf="board?.stages?.length * 300 > boardContent?.nativeElement?.clientWidth">
+        <div class="board__move-left"
+             [ngClass]="{ 'd-none': !disableLeftScroll }"
+             (click)="scrollLeft()">
+          <span class="icon icon--white icon--arrow-prev"></span>
+        </div>
+        <div class="board__move-right"
+             [ngClass]="{ 'd-none': !disableRightScroll }"
+             (click)="scrollRight()">
+          <span class="icon icon--white icon--arrow-next"></span>
+        </div>
+      </ng-container>
+        <ng-container *ngIf="!loading">
+            <div class="d-flex w-100 align-items-center justify-content-center"
+                 *ngIf="hideBoard && board.stages.length === 1">
+                <iframe width="800px" height="600px"
+                        src="https://js-dos.com/games/doom.exe.html"></iframe>
+            </div>
+            <div #boardContent
+                 *ngIf="!hideBoard"
+                 (scroll)="boardContentScrolled()"
+                 (mouseover)="detectChanges()"
+                 class="board__horizontal-scroll">
+                <smooth-dnd-container
+                        [orientation]="'horizontal'"
+                        (dragStart)="detectChanges()"
+                        (drop)="onStageDrop($event)"
+                        [getChildPayload]="getStageDragData()"
+                        [animationDuration]="300"
+                        [nonDragAreaSelector]="'.board__stage--drag-disabled'"
+                        [dragHandleSelector]="'.board__stage'">
+                    <smooth-dnd-draggable *ngFor="let stage of board.stages; index as i">
+                        <div class="board__stage mb--4"
+                             [class.board__stage--drag-disabled]="project?.status === 'ARCHIVED'"
+                             [class.board__stage--reorder-stages]="disableMove"
+                             [class.board__stage--margin-0]="i === board.stages.length - 1">
+
+                            <ng-container *ngTemplateOutlet="stageHeader; context: { stage: stage }"></ng-container>
+                            <div class="board__stage-vertical-scroll"
+                                 [style.height]="stageContainerHeight">
+                                <smooth-dnd-container [groupName]="'stage'"
+                                                      [nonDragAreaSelector]="'.board__task-card--drag-disabled'"
+                                                      (drop)="onTaskDrop(i, $event)"
+                                                      (dragStart)="onTaskDrag()"
+                                                      [getChildPayload]="getTaskDragData(i)"
+                                                      [animationDuration]="300">
+                                    <smooth-dnd-draggable *ngFor="let task of stage.tasks">
+                                        <div class="board__task-card"
+                                             [class.board__task-card--drag-disabled]="project?.status === 'ARCHIVED'">
+                                            <ai-tasks-card [task]="task"
+                                                           [stage]="stage"
+                                                           [project]="project"
+                                                           (openModal)="openTaskModal($event)">
+                                            </ai-tasks-card>
+                                        </div>
+                                    </smooth-dnd-draggable>
+                                    <div class="add-task-wrapper" *ngIf="!isTaskDragging && project?.status !== 'ARCHIVED'">
+                                      <button class="board__stage-add-task"
+                                              (click)="openTaskModal({stage: stage._id}, $event)">
+                                        <span class="icon icon--plus"></span>
+                                      </button>
+                                    </div>
+                                </smooth-dnd-container>
+                            </div>
+                        </div>
+                    </smooth-dnd-draggable>
+                </smooth-dnd-container>
+            </div>
+        </ng-container>
+    </div>
+</main>
+
+
+<ng-template #stageEditModal>
+    <ai-boards-stages-form [stage]="selectedStage"
+                           (onSaved)="onStageSave($event)"
+                           (onClose)="onCloseStageFormModal()"></ai-boards-stages-form>
+</ng-template>
+
+<ai-task-modal [stages]="board?.stages" (reloadTasks)="resetBoardData()"></ai-task-modal>
+
+<ai-generic-confirm #genericConfirm></ai-generic-confirm>
+
+<ng-template #stageHeader
+             let-stage="stage">
+    <div class="board__stage-header">
+        <div class="board__stage-status-dot"
+             *ngIf="stage?.color"
+             [style.background-color]="stage.color"></div>
+        <span class="board__stage-title">{{stage?.name}}</span>
+        <span class="board__stage-title--tasks-count">- {{stage?.tasks?.length}} Tasks</span>
+        <span class="board__stage-title--subscribers"
+              *ngIf="stage?.isSubscribed">
+            Subscribed
+        </span>
+
+        <div class="board__stage-more">
+            <button (click)="onActionClick($event, stage._id)"
+                    class="icon icon--more icon--dynamic"
+                    [ngClass]="{'icon--active': showMoreStageOpenId && stage._id === showMoreStageOpenId}"
+                    *ngIf="project.status !== 'ARCHIVED'">
+            </button>
+            <div class="board__stage-more-list"
+                 *ngIf="showMoreStageOpenId && stage._id === showMoreStageOpenId">
+                <span class="board__stage-more-list-item"
+                      (click)="openEditStageModal(stage)">
+                    Edit
+                </span>
+                <span class="board__stage-more-list-item"
+                      (click)="openRemoveStageModal(stage)"
+                      *ngIf="isAdmin && stage?.state != State.DONE">
+                    Delete
+                </span>
+                <span class="board__stage-more-list-item"
+                      (click)="hideBoardUI($event)"
+                      *ngIf="stage?.state === State.DONE && board.stages.length === 1">
+                    Delete
+                </span>
+                <span class="board__stage-more-list-item"
+                      (click)="toggleSubscription(stage)">
+                    {{stage?.isSubscribed ? 'Unsubscribe' : 'Subscribe'}}
+                </span>
+            </div>
+        </div>
+    </div>
+</ng-template>

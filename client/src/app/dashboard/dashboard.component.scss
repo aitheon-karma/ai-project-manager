@@ -1,0 +1,145 @@
+.project {
+  position: relative;
+
+  &__search-button {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 240px;
+    padding: 6px 16px;
+    background-color: transparent;
+    border: 1px solid #454545;
+    color: #7e7e7e;
+    letter-spacing: 0.2px;
+    font-size: 14px;
+    line-height: 20px;
+    box-shadow: none;
+    outline: none;
+    border-radius: 2px;
+    transition: all 0.2s, background-color 0s;
+    cursor: text;
+
+    &:hover {
+      background-color: rgba(126, 126, 126, 0.15);
+    }
+
+    &__close-search {
+      position: relative;
+    }
+  }
+
+  &__automate {
+    position: absolute;
+    top: 5px;
+    right: 279px;
+    min-height: 34px !important;
+    padding: 9px 16px !important;
+  }
+
+  &--search {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+    flex-wrap: nowrap;
+    margin-top: 29px !important;
+  }
+
+  &__icon-close {
+    cursor: pointer;
+  }
+}
+
+.tasks {
+  margin-top: 4rem;
+  margin-bottom: 4rem;
+  margin-left: 0;
+  margin-right: 0;
+
+  &__submenu {
+    margin: 0;
+    border-bottom: 1px solid #454545;
+  }
+
+  &__submenu-item {
+    font-size: 14px;
+    letter-spacing: 0.2px;
+    line-height: 20px;
+    margin-left: 32px;
+    border-bottom: 1px solid transparent;
+    padding: 14px 0;
+    color: #7e7e7e;
+    cursor: pointer;
+
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &--active {
+      color: #dcbc65;
+      border-bottom: 1px solid #dcbc65;
+    }
+  }
+}
+
+
+.dashboard {
+	padding-top: 24px;
+
+	&__top {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	&__title {
+		color: #fff;
+		font-size: 24px;
+		letter-spacing: 0px;
+		line-height: 32px;
+	}
+
+	&__edit {
+		height: 36px;
+	}
+
+	&__main-container {
+		min-height: fit-content;
+		max-height: calc(100vh - 214px);
+		margin-top: 16px;
+	}
+
+  &__create-dashboard-app-wrap {
+    padding: 24px;
+    background: #2b2b2b;
+    border-radius: 2px;
+  }
+
+	&__create-dashboard-app {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+		width: 100%;
+		padding: 16px;
+		color: #dcbc65;
+		font-size: 12px;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+		line-height: 24px;
+		border: 1px dashed #dcbc65;
+		border-radius: 2px;
+		cursor: pointer;
+		transition: .1s ease-in-out;
+
+		&:hover {
+			background: #383838;
+			transition: .1s ease-in-out;
+		}
+	}
+}

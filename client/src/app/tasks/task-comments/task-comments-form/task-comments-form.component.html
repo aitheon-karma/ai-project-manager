@@ -1,0 +1,106 @@
+<div *ngIf="currentServiceKey && commentControl">
+    <div class="row comment-box align-items-start m-0">
+        <ngx-avatar class="my-avatar mr--16" value="{{me?.profile?.firstName}} {{me?.profile?.lastName}}"
+                    name="{{me?.profile?.firstName}} {{me?.profile?.lastName}}" size="40"
+                    [src]="me?.profile?.avatarUrl">
+        </ngx-avatar>
+        <div class="input-container">
+            <div class="add-comment-wrap">
+                <ai-rich-text-editor [formControl]="commentControl"
+                                     [saveOnEnter]="true"
+                                     customClass="comment-editor"
+                                     [error]="isCommentFocused && submitted && !commentControl?.valid && !files?.length"
+                                     [hideToolbarOnBlur]="true"
+                                     [config]="commentEditorConfig"
+                                     (save)="submit()"
+                                     (mentionCreated)="onMentionCreated($event)"
+                                     (attachFile)="showFileUploader()"
+                                     (focusStatus)="setCommentInputStatus($event)"
+                                     #editor>
+                </ai-rich-text-editor>
+            </div>
+            <div class="comment__buttons">
+                <label for="addAttachment"
+                       #attachIcon
+                       class="comment__add-attachment-label">
+              <span class="icon icon--attach icon--dynamic icon--size-16px"
+                    [class.d-none]="isCommentFocused"></span>
+                </label>
+                <input accept=".jpg, .jp2, .j2k, .jpf, .jpm, .jpg2, .j2c, .jpc, .jfif, .jpe, .png, .doc, .docx, .webp, .pdf, .xls, .xlsx, .ppt .txt, .mov, .mp4, .mkv, .gif, .svg"
+                       ng2FileSelect
+                       id="addAttachment"
+                       type="file"
+                       [uploader]="driveUploader?.uploader"
+                       multiple
+                       hidden/>
+            </div>
+        </div>
+    </div>
+
+    <div class="comment__menu">
+      <div class="comment__save-buttons">
+        <ng-container *ngIf="editingComment || parentCommentId || commentControl?.value?.length || files?.length">
+            <button class="button button--small button--contained mr--8"
+                    type="button"
+                    *ngIf="commentControl?.valid || files?.length"
+                    (click)="submit()">
+                {{ editingComment ? 'Save' : 'Post' }}
+            </button>
+            <button class="button button--small button--ghost"
+                    type="button"
+                    (click)="cancel($event)">
+                cancel
+            </button>
+          </ng-container>
+        </div>
+        <span class="comment__hint-text">
+          <span *ngIf="isMacPlatform">
+            <span class="comment__hint-post-comment">
+              <span class="comment__hint-key">Return</span> to post a comment
+            </span>
+            <span class="comment__hint-add-line">
+              <span class="comment__hint-key">Shift</span> + <span class="comment__hint-key">Return</span> to add a new line
+            </span>
+          </span>
+        <span *ngIf="!isMacPlatform">
+          <span class="comment__hint-post-comment">
+            <span class="comment__hint-key">Enter</span> to post a comment
+          </span>
+          <span class="comment__hint-add-line">
+            <span class="comment__hint-key">Shift</span> + <span class="comment__hint-key">Enter</span> to add a new line
+          </span>
+        </span>
+      </span>
+    </div>
+
+    <div class="attachments" *ngIf="files.length > 0">
+        <div class="attachments__drop-image-container"
+             *ngFor="let file of files; let i = index"
+             tooltip="{{file.name}}"
+             container="body"
+             placement='top'
+             (click)="openFile(file.signedUrl)">
+            <div class="attachments__item-background"></div>
+            <img *ngIf="isFileImage(file)" src="{{ file.signedUrl }}" class="attachments__uploaded-file">
+            <div *ngIf="!isFileImage(file) && !file.contentType.includes('video')"
+                 class="icon-wrapper attachments__uploaded-file">
+                <i class="fa fa-file-o document-icon"></i>
+                <span class="file-extension">{{ file.name.split('.').pop() }}</span>
+            </div>
+            <div *ngIf="file.contentType.includes('video')"
+                 class="attachments__uploaded-file attachments__uploaded-file--video">
+                <video src="{{ file.signedUrl }}"></video>
+                <span class="attachments__play-icon icon icon--play icon--active-open icon--gold"></span>
+            </div>
+            <button class="attachments__remove-item icon icon--close icon--white icon--size-16px"
+                    (click)="removeFile($event, i)">
+            </button>
+        </div>
+    </div>
+
+    <ai-drive-uploader #driveUploader (afterAddingFile)="fileAdded($event, driveUploader)"
+                       (success)="onSuccessUpload($event)"
+                       [oganizationId]="currentServiceKey.key"
+                       [service]="currentServiceKey" [serviceFolder]="serviceFolder">
+    </ai-drive-uploader>
+</div>

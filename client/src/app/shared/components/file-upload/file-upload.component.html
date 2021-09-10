@@ -1,0 +1,23 @@
+<ai-loading *ngIf="loading"></ai-loading>
+
+<div class="file-upload-component">
+  <div class="file-upload-wrapper" aiDriveUploader>
+    <div class="ai-uploader-file-btn" *ngIf="driveUploader">
+      <input type="file" ng2FileSelect [uploader]="driveUploader?.uploader" multiple />
+    </div>
+    <p><span class="ai-uploader-file-btn btn btn-primary btn-sm">Click here</span>&nbsp;or drag and drop your files</p>
+    <ai-drive-uploader #driveUploader (afterAddingFile)="onBeforeUpload($event)" (success)="onSuccessUpload($event)" [service]="currentServiceKey" [autoUpload]="false"></ai-drive-uploader>
+  </div>
+
+  <div class="image-wrap">
+    <ul class="image-nav pl-2">
+        <li *ngFor="let doc of docs">
+          <a target="_blank" [href]="doc && doc.signedUrl">
+              <img *ngIf="doc && doc.contentType && doc.contentType.indexOf('image') !== -1" class="timeline-img" [src]='doc.signedUrl'>
+              {{ doc && doc.name }}
+          </a>
+          <span class="close-btn" (click)="removeDocument(doc)">&nbsp;<i class="fa fa-times"></i></span>
+        </li>
+      </ul>
+  </div>
+</div>

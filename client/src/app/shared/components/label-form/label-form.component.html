@@ -1,0 +1,105 @@
+<div class="modal-create-label__header d-flex align-items-center">
+  <h4 class="modal-create-label__title pull-left form heading mb--0">
+    {{isNew ? 'New' : 'Edit'}} label
+  </h4>
+  <button type="button" class="modal-create-label__close icon icon--close" aria-label="Close"
+    (click)="cancelLabelCreation()"></button>
+</div>
+<div class="modal-create-label__body">
+  <form [formGroup]="labelForm">
+    <label class="modal-create-label__label" [hidden]="labelForm.get('name').touched &&labelForm.get('name').hasError('required')">
+      Label name
+    </label>
+    <label *ngIf="labelForm.get('name').touched &&labelForm.get('name').hasError('required') " class="text-danger">
+      Label name is required
+    </label>
+    <div class="input-wrap input-wrap--contained input-wrap--small mb--16" [class.input-wrap--error]="labelForm.get('name').touched &&labelForm.get('name').hasError('required')">
+      <input (keyup)="labelForm.updateValueAndValidity()" class="input-wrap__input nameWidth" class="input-wrap__input"
+        type="text" autocomplete="off" placeholder="Enter Label Name" formControlName="name" maxlength=20>
+      <span class="input-wrap__counter">{{labelForm.value.name?.length}}/20</span>
+    </div>
+    <label class="modal-create-label__label" [hidden]="errorInLabelColor">
+      Choose color
+    </label>
+    <label *ngIf="errorInLabelColor" class="text-danger">
+      Label color is required
+    </label>
+    <div class="modal-create-label__list-colors">
+      <div class="modal-create-label__column">
+        <button class="modal-create-label__color bg-fire"
+          [ngClass]="{'icon icon--tick icon--size-24px':  labelForm.value.color == 'bg-fire'}"
+          (click)="selectColor('bg-fire')"></button>
+      </div>
+      <div class="modal-create-label__column">
+        <button class="modal-create-label__color bg-orange"
+          [ngClass]="{'icon icon--tick icon--size-24px': labelForm.value.color == 'bg-orange'}"
+          (click)="selectColor('bg-orange')"></button>
+      </div>
+      <div class="modal-create-label__column">
+        <button class="modal-create-label__color bg-banana"
+          [ngClass]="{'icon icon--tick icon--size-24px': labelForm.value.color == 'bg-banana'}"
+          (click)="selectColor('bg-banana')"></button>
+      </div>
+      <div class="modal-create-label__column">
+        <button class="modal-create-label__color bg-olive"
+          [ngClass]="{'icon icon--tick icon--size-24px': labelForm.value.color == 'bg-olive'}"
+          (click)="selectColor('bg-olive')"></button>
+      </div>
+      <div class="modal-create-label__column">
+        <button class="modal-create-label__color bg-frog"
+          [ngClass]="{'icon icon--tick icon--size-24px': labelForm.value.color == 'bg-frog'}"
+          (click)="selectColor('bg-frog')"></button>
+      </div>
+      <div class="modal-create-label__column">
+        <button class="modal-create-label__color bg-arctic"
+          [ngClass]="{'icon icon--tick icon--size-24px': labelForm.value.color == 'bg-arctic'}"
+          (click)="selectColor('bg-arctic')"></button>
+      </div>
+      <div class="modal-create-label__column">
+        <button class="modal-create-label__color bg-sky"
+          [ngClass]="{'icon icon--tick icon--size-24px': labelForm.value.color == 'bg-sky'}"
+          (click)="selectColor('bg-sky')"></button>
+      </div>
+      <div class="modal-create-label__column">
+        <button class="modal-create-label__color bg-iris"
+          [ngClass]="{'icon icon--tick icon--size-24px': labelForm.value.color == 'bg-iris'}"
+          (click)="selectColor('bg-iris')"></button>
+      </div>
+      <div class="modal-create-label__column">
+        <button class="modal-create-label__color bg-violet"
+          [ngClass]="{'icon icon--tick icon--size-24px': labelForm.value.color == 'bg-violet'}"
+          (click)="selectColor('bg-violet')"></button>
+      </div>
+      <div class="modal-create-label__column">
+        <button class="modal-create-label__color bg-purple"
+          [ngClass]="{'icon icon--tick icon--size-24px': labelForm.value.color == 'bg-purple'}"
+          (click)="selectColor('bg-purple')"></button>
+      </div>
+      <div class="modal-create-label__column">
+        <button class="modal-create-label__color bg-lavender"
+          [ngClass]="{'icon icon--tick icon--size-24px': labelForm.value.color == 'bg-lavender'}"
+          (click)="selectColor('bg-lavender')"></button>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-create-label__footer">
+  <button type="button"
+          class="button button--ghost button--medium"
+          (click)="cancelLabelCreation()">
+    cancel
+  </button>
+  <button *ngIf="!isLoading;else loadingView"
+          type="button"
+          class="button button--medium button--contained ml--16"
+          [disabled]="labelForm.invalid || !labelForm.value.name.trim()"
+          (click)="isNew ? createLabel() : updateLabel()">{{ isNew ? 'Create' : 'Update' }}
+  </button>
+</div>
+
+
+<ng-template #loadingView>
+  <div class="d-flex">
+    <ai-loading class="m-auto"></ai-loading>
+  </div>
+</ng-template>
